@@ -42,7 +42,11 @@
 [번역본](translate/git-core-tutorial.txt)
 
 ## git flow
+????
 
+## 추가자료
+- 그래픽
+https://learngitbranching.js.org/
 
 
 
