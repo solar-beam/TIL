@@ -34,6 +34,6 @@ new RegExp(pattern[, flags]) /*생성자로 만들때*/
 - literal : 표현식이 평가될때 컴파일된 형태로 제공되며, 상수 형태로 변경되지 않을때 사용한다. 컴퓨터 자원도 절약할 수 있다.
 - constructor : 표현식이 런타임에 컴파일됨(ES6부터는 정규식 생성자에 문자열이 아니라 정규식 리터럴을 입력해도 `[TypeError](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/TypeError)`가 뜨지 않는다.)
 - [JavaScript Regex Cheatsheet](https://www.debuggex.com/cheatsheet/regex/javascript)
-![](../../img/regex-cheat-sheet.PNG)
+![](../img/regex-cheat-sheet.PNG)
 
 ## [참고 : JS 비교연산자](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Comparison_Operators)
