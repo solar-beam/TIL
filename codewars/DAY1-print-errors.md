@@ -32,7 +32,7 @@ new RegExp(pattern[, flags]) /*생성자로 만들때*/
   - m(multiline, 시작/끝문자 패턴을 다중행에 적용함. 각각 라인의 시작 혹은 끝뿐 아니라 전체 라인의 시작 혹은 끝에도 적용)
   - y(sticky, `lastIndex` 프로퍼티가 가리키는 데 까지만 비교함. 예) abaaba문자열에서 메소드를 여러번 호출하면 `lastIndex`는 차례로 3,6이 된다)
 - literal : 표현식이 평가될때 컴파일된 형태로 제공되며, 상수 형태로 변경되지 않을때 사용한다. 컴퓨터 자원도 절약할 수 있다.
-- constructor : 표현식이 런타임에 컴파일됨(ES6부터는 정규식 생성자에 문자열이 아니라 정규식 리터럴을 입력해도 `[TypeError](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/TypeError)`가 뜨지 않는다.)
+- constructor : 표현식이 런타임에 컴파일됨(ES6부터는 정규식 생성자에 문자열이 아니라 정규식 리터럴을 입력해도 [`TypeError`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/TypeError)가 뜨지 않는다.
 - [JavaScript Regex Cheatsheet](https://www.debuggex.com/cheatsheet/regex/javascript)
 ![](../img/regex-cheat-sheet.PNG)
 
