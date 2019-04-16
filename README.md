@@ -1,13 +1,13 @@
-# TIL
+## TIL
 
-- [ ] git-core-tutorial번역  
-- [ ] codewars js 100문제  
-- [ ] 프로필용 웹앱만들기  
+오늘은 무엇을 했나..  
+그리고 지금의 목표는?  
 
-- 20181027 : TIL시작
-- 20181103 : git 1/2
-- 20181104 : git 2/2
-- 20181105 : regex, js string, TIL디렉토리수정
-- 20181106 : js number
-- 20181230 : js ES6
-- 20190323 : js
+- [ ] WEB APP (프로필형 자소서 페이지)
+  - [ ] JS + ES6
+  - [ ] JS Front Framework
+- [ ] GO LANG
+  - [ ] 4.21.(일)까지, [tutorialpoints](https://www.tutorialspoint.com/go/go_program_structure.htm)
+  - [ ] EFFECTIVE GO
+- [ ] LINUX
+  - [ ] Linux from scratch
