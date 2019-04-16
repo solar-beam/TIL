@@ -1,8 +1,8 @@
 # TIL
 
-[ ] git-core-tutorial번역
-[ ] codewars js 100문제
-[ ] 프로필용 웹앱만들기
+- [ ] git-core-tutorial번역  
+- [ ] codewars js 100문제  
+- [ ] 프로필용 웹앱만들기  
 
 - 20181027 : TIL시작
 - 20181103 : git 1/2
