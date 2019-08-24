@@ -12,3 +12,7 @@
   - [ ] [Structure of Go Application](https://mingrammer.com/translation-structuring-applications-in-go/)
 - [ ] LINUX
   - [ ] Linux from scratch
+- [ ] Android/Kotlin : ~9/27
+ - [ ] [Kotlin tutorial](https://kotlinlang.org/docs/tutorials/getting-started.html)
+ - [ ] Kotlin Toy Project
+- [ ] Web Assembly
