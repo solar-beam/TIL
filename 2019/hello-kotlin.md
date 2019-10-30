@@ -22,5 +22,10 @@
 - 패키지 import할 때 파일경로를 다 안 써도 된다. 알아서 찾는다. 어떻게?
 - 프로그램 시작점은 main이다. 이건좀 알아먹겠네^^
 - *함수* 함수의 파라미터, 반환값의 변수형을 정할 때는 `:`을 사용한다? 함수가 뭐이래?? 리턴 타입을 추상적으로 표현?? 반환이 의미가 없을 땐 `: Unit`인데, 생략할 수도 있다(그럴거면 왜?)
-- *변수* 
-
+- *변수* 변수는 값을 변경할 수 없는 val형과, 할 수 있는 var로 나뉜다.
+- *문자열 템플릿* $변수이름, ${토큰}
+- [NULL-SAFETY](https://kotlinlang.org/docs/reference/null-safety.html)
+- control flow
+- ranges
+- collections
+- classes, objects, instances
