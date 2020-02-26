@@ -152,41 +152,61 @@ Brute-force / Bottom-up
     - https://www.acmicpc.net/problem/11049 (행렬 곱셈 문제)
     - https://www.acmicpc.net/problem/11066 (파일 합치기)
     - https://youtu.be/Tdl6VP4bS90 (백준 행렬 곱셈 문제 해설 강의) 
-- 
-
 
 - 구현하기
 
 ```c++
-#include <iostream>
+//BOJ 11049
+#include<iostream>
+#define ARRAY_SIZE 600
+#define len(arr) sizeof(arr)/sizeof(arr[0])
 using namespace std;
 
-void matrixMultiply(int a[][], int b[][]) {
-	if (sizeof(a[0]) != sizeof(b[0])) {
-		cout << "호환되지 않는 행렬입니다." << endl;
-		return;
-	}
-}
+struct Matrix {
+	int rownum;
+	int colnum;
+};
 
 int main() {
+	Matrix arr[ARRAY_SIZE];
+	arr[1] = { 5, 3 };
+	for (int i = 2; i < ARRAY_SIZE; i++) {
+		arr[i].rownum = arr[i - 1].colnum;
+		arr[i].colnum = rand() % 100;
+	}
 
+	int memo[ARRAY_SIZE];
+	memo[1] = 1;
+	memo[2] = arr[1].rownum * arr[1].colnum * arr[2].colnum;
+	for (int i = 3; i < ARRAY_SIZE; i++) {
+		int min = INT_MAX, tmp = 0;
+		for (int j = 1; j < i; j++) {
+			tmp = memo[j] + memo[i - j];
+			min = (min < tmp) ? min : tmp;
+		}
+		memo[i] = min;
+	}
+
+	cout << memo[ARRAY_SIZE - 1];
+	return 0;
 }
 ```
 
 결과는
 
 ```
-DAMM
+YEAH!
 ```
 
 왜?
 - C++에서 다차원배열을 함수매개인자로 넘길 때는 열크기를 지정해줘야 한다. 
-- 아니다. 접근법이 틀렸다.
 
 ```c++
 void foo(int arr[][10]);
 void foo(int (*arr)[10]);
 ```
+
+- 아니다. 접근법이 틀렸다.
 
 ## TOO DEEP
 - 최장 공통 부분 시퀀스
