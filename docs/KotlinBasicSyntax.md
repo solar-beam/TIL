@@ -127,7 +127,8 @@ fun printProduct(arg1: String, arg2: String){
 > NOTE : Kotlin의 꽃, [Null-safety](https://kotlinlang.org/docs/reference/null-safety.html)
 
 ### Type checks and automatic casts
-`is`연산자로 주어진 표현식이 특정 타입의 인스턴스인지 확인한다. 변경할수 없는 지역변수나 프로퍼티의 타입을 구별할 수 있으며느 명시적으로 형변환할 필요가 없어진
+`is`연산자로 주어진 표현식이 특정 타입의 인스턴스인지 확인한다.  
+변경할수 없는 지역변수나 프로퍼티의 타입이 식별되면, 명시적으로 형변환할 필요가 없다.
 ```
 fun getStringLength(obj: Any): Int?{
 	if(obj is String){
@@ -247,8 +248,10 @@ fruits
 	.forEach{println(it)}
 ```
 
-> NOTE: 람다식이란, 별도로 이름을 붙여 정의하거나 변수에 대입하지 않고 함수 호출/반환시 상수 표현식으로 작성한 함수이다. 함수().체인1().체인2()와 같이 작성할 수 있다. 오류발생시 함수콜스택을 추적하기 어려워진다는 문제가 있다.
-> NOTE: 고차함수란, 프로그래밍 언어에서 함수를 구현할 때 함수를 인자로 넘길 수 있거나 반환할 수 있을 때, 함수를 일급객체(언어 내부에서 값으로 표현되고 전달할 수 있는 자료형)으로 취급한다 하고, 그 함수를 고차함수라 부른다. 고차함수가 아닌 것은 일차함수라고 부른다.
+> NOTE: 람다식이란, 별도로 이름을 붙여 정의하거나 변수에 대입하지 않고 함수 호출/반환시 상수 표현식으로 작성한 함수이다. 함수().체인1().체인2()와 같이 작성할 수 있다. 오류발생시 함수콜스택을 추적하기 어려워진다는 문제가 있다.  
+
+> NOTE: 고차함수란, 프로그래밍 언어에서 함수를 구현할 때 함수를 인자로 넘길 수 있거나 반환할 수 있을 때, 함수를 일급객체(언어 내부에서 값으로 표현되고 전달할 수 있는 자료형)으로 취급한다 하고, 그 함수를 고차함수라 부른다. 고차함수가 아닌 것은 일차함수라고 부른다.  
+
 > NOTE: `it`키워드는, 다음에 araboza.[kotlin과 람다](https://tourspace.tistory.com/110), [JS에서 ->함수](https://hacks.mozilla.org/2015/06/es6-in-depth-arrow-functions/)
 
 ### Creating basic classes and their instances
@@ -258,18 +261,358 @@ val triangle = Triangle(3.0, 4.0, 5.0)
 ```
 
 ## Idioms
-//TODO https://kotlinlang.org/docs/reference/idioms.html
+Kotlin관용어 중에서 임의로 몇 가지를 추려보았다. 아울러 자주 사용되는 관용어도 기술한다.
+
+### Creating DTOs(POJOs/POCOs)
+```
+data class Customer(val name: String, val email:String)
+```
+- 다음 기능을 자동으로 제공한다.
+  - getter(var형식이면 setter도)
+  - `equals()`
+  - `hashcCode()`
+  - `toString()`
+  - `copy()`
+  - `component1()`, `component2()`, ...
+> NOTE: DAO는 DataAccessObject로서, 실제로 DB에 접근하는 객체이다. DTO는 DataTransferObject로서 계층간 데이터교환을 위한 객체다. EntityClass는 실제 DB 테이블과 매칭할 클래스이다.  
+> NOTE: POJO는 PlainOldJavaObject, POCO는 PlainOldCLRObject. 프레임워크에 종속되지 않은 순수 자바객체를 가리킨다. 사실 큰 의미없다. 그런데 getter/setter를 제외한 메소드를 가지지 않고, 값으로만 정의되는 객체를 말하기도 한다.
+
+### Default values for function parameters
+```
+fun foo(a: Int = 0, b: String = "") { ... }
+```
+
+### Filtering a list
+```
+val positives = list.filter { x -> x > 0 }
+val positives = list.filter { it > 0 }
+```
+
+### Checking element presence in a collection
+```
+if ("john@example.com" in emailsList) { ... }
+if ("jane@example.com" !in emailsList) { ... }
+```
+
+### String interpolation
+```
+println("Name $name")
+```
+
+### Instance Checks
+```
+when (x) {
+    is Foo -> ...
+    is Bar -> ...
+    else   -> ...
+}
+```
+
+### Traversing a map/list of pairs
+```
+for((k,v) in map) println("$k->$v")
+```
+`k`,`v`는 임의의 식별자
+
+### Using ranges
+```
+for(i in 1..100) { ... } //closed range : 1이상 100이하
+for(i in 1 until 100) { ... } //half-open : 1이상 100미만
+for(x in 2..10 step 2) { ... }
+for(x in 10 downTo 1) { ... }
+if(x in 1..10) { ... }
+```
+
+### Read-only list
+Kotlin의 콜렉션은 변경가능한 것과 그렇지 않은 것을 구분하여 사용한다. List는 기본적으로 변경불가하며, 생성자에 길이와 초기화 람다식을 넣어 생성한다.
+```
+val list: List<Int> = List(5, {i->i})
+```
+또는
+```
+val list = listOf("a", "b", "c")
+```
+변경가능한 리스트는 MutableList또는 ArrayList클래스를 이용한다. 생성자를 이용할 수도 있고, mutableListOf()같이 함수로 초기화할 수도 있다.  
+  
+요약하면
+콜렉션 | Immutable | Mutable
+---- | --------- | -------
+List | listOf | mutableListOf, arrayListOf
+Set | setOf | mutableSetOf, hashSetOf, linkedSetOf, sortedSetOf
+Map | mapOf | mutableMapOf, hashMapOf, linkedMapOf, sortedMapOf
+
+>REF : [Collections - List, Set, Map](https://m.blog.naver.com/PostView.nhn?blogId=yuyyulee&logNo=221237499417&proxyReferer=https%3A%2F%2Fwww.google.com%2F)
+
+### Read-only map
+```
+val map = mapOf("a" to 1, "b" to 2, "c" to 3)
+```
+
+### Accessing a map
+```
+println(map["key"])
+map["key"] = value
+```
+
+###Lazy property
+`val`은 선언과 동시에 값을 가져야하는데, 아래와 같이 객체가 고유 수명주기를 가지는 경우 초기화 시점을 특정할 수 없는 문제가 생긴다.
+```
+class MainActivity : AppCompatActivity() {
+    private val mWelcomeTextView: TextView
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        // 다음 초기화 코드는 어디에?????
+        // mWelcomeTextView = findViewById(R.id.msgView) as TextView
+    }
+}
+```
+이때 `by lazy`키워드를 통해 초기화를 지연할 수 있으며, 중괄호 안의 코드는 프로퍼티를 처음으로 참조하는 시점에 수행한다.
+```
+class MainActivity : AppCompatActivity() {
+    private val messageView : TextView by lazy {
+        // messageView의 첫 액세스에서 실행됩니다
+        findViewById(R.id.message_view) as TextView
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+    fun onSayHello() {
+        messageView.text = "Hello"
+    }
+}
+```
+
+>NOTE: lateinit키워드로 non-null 프로퍼티가 생성자 시점에 null이어도 정상 컴파일 되도록 강제할 수 있다.  
+>NOTE: 세부내용은 다음 링크를 참조,[by lazy는 어떻게 동작하는가](https://medium.com/til-kotlin-ko/kotlin-delegated-property-by-lazy%EB%8A%94-%EC%96%B4%EB%96%BB%EA%B2%8C-%EB%8F%99%EC%9E%91%ED%95%98%EB%8A%94%EA%B0%80-74912d3e9c56)
+
+### Extension Functions
+```
+fun String.spaceToCamelCase(): Unit = { ... }
+//반환값이 없으면 등호는 생략할 수 있다
+​
+"Convert this to camelcase".spaceToCamelCase()
+```
+
+### Creating singleton
+```
+object Resource{
+    val name = "Name"
+}
+```
+
+### If not null shorthand
+NullSafety참조, safe call
+```
+val files = File("Test").listFiles()
+println(files?.size)
+//files가 null이 아니면 size참조
+```
+
+### If not null else shorthand
+이른바 Elvis idiom되시겠다.
+```
+val files = File("Test").listFiles()
+println(files?.size ?: "empty")
+//files.size가 null이라면 "empty"
+```
+### Executing a statement if null
+Elvis idiom으로 예외를 던질수도 있다.
+```
+val values = ...
+val email = values["email"] ?: throw IllegalStateException("Email is missing")
+```
+
+### Get first item of a possibly empty collection
+```
+val emails = ... 
+val mainEmail = emails.firstOrNull() ?: ""
+```
+
+### Execute if not null
+```
+val value = ...
+value?.let {
+
+}
+```
+let함수는 호출하는 객체를 블록의 인자로 넘기고 결과값을 반환한다. 블록(람다식) 인자가 하나일 경우 이름을 생략하고 `it`을 사용할 수 있다. safe call `?.`과 함께 사용해 `if(null!=obj) ...`을 대체할 수 있다.
+
+>REF : [코틀린의 유용한 함수들 let, apply, run, with](https://www.androidhuman.com/lecture/kotlin/2016/07/06/kotlin_let_apply_run_with/)
+
+### Map nullable value if not null
+```
+val value = ...
+
+val mapped = value?.let { transformValue(it) } ?: defaultValue 
+// defaultValue is returned if the value or the transform result is null.
+```
+위에서 언급했듯 let은 호출하는 객체를 블록의 인자로 넘긴다. 여기서는 value가 람다식 인자로 넘겨졌다. 그런데 인자가 하나이므로 이름을 생략하고 it으로 표시했다. ?:는 let에 걸린다.
+
+### Return on when expression
+표현식을 반환할 수 있다(결과값이 있으니까)
+```
+fun transform(color: String): Int {
+    return when (color) {
+        "Red" -> 0
+        "Green" -> 1
+        "Blue" -> 2
+        else -> throw IllegalArgumentException("Invalid color param value")
+    }
+}
+```
+
+### try/catch expression
+표현식으로 할당할 수 있다(결과값이 있으니까)
+```
+fun test(){
+    val result = try {
+        count()
+    } catch (e: ArithmeticException) {
+        throw IllegalStateException(e)
+    }
+
+    // Working with result
+}
+```
+
+### if expression
+```
+fun foo(param: Int) {
+    val result = if (param == 1) {
+        "one"
+    } else if (param == 2) {
+        "two"
+    } else {
+        "three"
+    }
+}
+```
+
+### Builder-style usage of methods that return Unit
+```
+fun arrayOfMinusOnes(size: Int): IntArray {
+    return IntArray(size).apply { fill(-1) }
+}
+```
+`apply()`는 호출한 객체를 블록의 *리시버*로 전달하고 객체 자체를 반환한다. 리시버란 블록 내 메서드 및 속성에 바로 접근할 수 있도록 할 객체이다. 아래와 같이 객체 초기화할 때 쓸 수 있다. 객체생성과 연속된 작업필요시.
+```
+val param = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+    gravity = Gravity.CENTER_HORIZONTAL
+    weight = 1f
+    topMargin = 100
+    bottomMargin = 100
+}
+```
+> NOTE: run은 호출한 객체를 블록의 리시버로 전달하고 블록의 결과값을 반환한다. 이미 생성된 객체에 대하여 연속된 작업이 필요할 때 사용한다.  
+> NOTE: with은 인자로 받는 객체를 블록의 리시버로 전달하며 블록의 결과값을 반환한다. run은 객체.run이고 with은 with(객체)이다. 리시버로 전달할 객체 위치가 다르다.
+
+### Single-expression function
+```
+fun theAnswer() = 42
+```
+아래와 같은 코드다.
+```
+fun theAnswer(): Int{
+  return 42
+}
+```
+다른 관용구와 함께 쓸 수 있다.
+```
+fun transform(color: String): Int = when (color) {
+    "Red" -> 0
+    "Green" -> 1
+    "Blue" -> 2
+    else -> throw IllegalArgumentException("Invalid color param value")
+}
+```
+
+### Calling multiple methods on an object instance(with)
+객체를 리시버로 전달하여 결과값을 반환한다. 객체는 괄호안.
+```
+class Turtle {
+    fun penDown()
+    fun penUp()
+    fun turn(degrees: Double)
+    fun forward(pixels: Double)
+}
+
+val myTurtle = Turtle()
+with(myTurtle) { //draw a 100 pix square
+    penDown()
+    for(i in 1..4) {
+        forward(100.0)
+        turn(90.0)
+    }
+    penUp()
+}
+```
+
+### Configuring properties of an object(apply)
+호출한 객체를 리시버로 전달하여 결과값을 반환한다.
+```
+val myRectangle = Rectangle().apply {
+    length = 4
+    breadth = 5
+    color = 0xFAFAFA
+}
+```
+
+### Java 7's try with resources
+`use`메소드는 이하 블럭에서 예외발생과 관계없이 리소스를 사용하고 다시 닫으라는 뜻이다.
+```
+val stream = Files.newInputStream(Paths.get("/some/file.txt"))
+stream.buffered().reader().use { reader ->
+    println(reader.readText())
+}
+```
+
+### Convenient form for a generic function that requires the generic type information
+```
+//  public final class Gson {
+//     ...
+//     public <T> T fromJson(JsonElement json, Class<T> classOfT) throws JsonSyntaxException {
+//     ...
+
+inline fun <reified T: Any> Gson.fromJson(json: JsonElement): T = this.fromJson(json, T::class.java)
+```
+> ?#굳이
+
+### Consuming a nullable Boolean
+```
+val b: Boolean? = ...
+if (b == true) {
+    ...
+} else {
+    // `b` is false or null
+}
+```
+> ?#굳이
+
+### Swapping two variables
+```
+var a = 1
+var b = 2
+a = b.also { b = a }
+```
+ㅋㅋㅋㅋㅋ어지간히 
+
+### TODO(): Marking code as incomplete
+```
+fun calcTaxes(): BigDecimal = TODO("Waiting for feedback from accounting")
+```
+Kotlin표준 라이브러리에는 `todo()`함수가 있다. 언제나 `NotImplementedError` 예외를 던진다. 리턴타입은 `Nothing`인데 그래서 어디든 기대되는 타입과 무관하게 쓸 수 있다. 구현안된 이유를 인자로 넘기는 식으로 오버로딩도 가능하다. 인텔리J에서는 `todo()`를 자동으로 인식해 `TODO`창에서 볼 수 있다.
 
 ## Coding Conventions
 //TODO https://kotlinlang.org/docs/reference/coding-conventions.html
 
 ## Lexical grammar
 - documenation : `/** */`으로 마크다운/javadoc형식 문서를 작성할 수 있다
-- Identifiers : `(Letter | '_') {Letter | '_' | UnicodeDigit}*` 또는 `'\`'<any character excluding CR, LF and '`'> {<any character excluding CR, LF and '\`'>}`
+- Identifiers : `(Letter | '_') {Letter | '_' | UnicodeDigit}*` 또는 Backtik 안에 `<any character excluding CR, LF and '(backtik)'> {<any character excluding CR, LF and '(backtik)'>}`
 - Tokens : 공백, 주석, 예약어, 연산자, 리터럴, 문자열
   - Whitespace(WS) and comment : 공백과 주석
   - Keywords and operators : 예약어와 연산자
-    - keys : return, continue, break, this, super, file, field, property, get, set, setparam, delegate, package, import, class, interface, fun, object, val, var, typealias, constructor, by, companion, init, typeof, where, if, else, when, try, catch, finally, for, do, while, throw, as, is, in, !is, !in, out, dynamic, public, private, protected, internal, enum, sealed, annotation, data, inner, tailrec, operator, inline, infix, external, suspend, override, abstract, final, open, const, lateinit, varag, noinline, crossinline, reified, expect, actual 등
+    - keys : *return, continue, break, this, super, file, field, property, get, set, setparam, delegate, package, import, class, interface, fun, object, val, var, typealias, constructor, by, companion, init, typeof, where, if, else, when, try, catch, finally, for, do, while, throw, as, is, in, !is, !in, out, dynamic, public, private, protected, internal, enum, sealed, annotation, data, inner, tailrec, operator, inline, infix, external, suspend, override, abstract, final, open, const, lateinit, varag, noinline, crossinline, reified, expect, actual 등*
   - Literals : 10진수/8진수/16진수/2진수, double/float/integer/real/exponent, boolean, null, character, unicode character, escapedIdentifier(t/b/r/n/'/"/\/$)
   - String : 큰따옴표 하나는 일반문자열, 큰따옴표 세개짜리는 이스케이핑 없이 문자열을 그대로 보여줄 수 있다. `"""C:\Repository\read.me"""`
 - statement and expression
