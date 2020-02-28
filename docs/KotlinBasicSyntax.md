@@ -176,6 +176,12 @@ while (index < items.size) {
     index++
 }
 ```
+또는
+```
+do {
+    val y = retrieveData()
+} while (y != null) // y는 여기서도 유효하다
+```
 
 ### when expression
 ```
@@ -188,6 +194,22 @@ fun describe(obj:Any): String =
 		else	-> "Unknown"
 	}
 ```
+Kotlin 1.3부터는 when절 내부에 val변수할당 표현식을 사용할 수 있고, 해당 변수는 when내부에서만 유효하다.
+
+### Returns and Jumps
+- 다음 키워드는 표현식의 어디에서도 쓰일 수 있다.
+  - **return** 키워드를 둘러싼, 가장 가까운 함수/익명함수로 돌아간다
+  - **break** 키워드를 둘러싼, 가장 가까운 반복문을 정지한다
+  - **continue** 키워드를 둘러싼, 가장 가까운 반복문의 다음 단계로 진행한다
+- 라벨링을 통해 '가장 가까운'을 '라벨링한'으로 바꿔 동작한다.
+```
+loop@ for(i in 1..100){
+    for(j in 1..100){
+         if( ... ) break@loop
+    }
+}
+```
+> NOTE : Return에 라벨 붙이는 건 다음에 araboza.[Return at Lables](https://kotlinlang.org/docs/reference/returns.html#return-at-labels) 인라인 익명 람다식에서 리턴값을 내부의 지역함수로 보낼 수 있다. 호출한 함수와 같은 이름으로 라벨링해도 된다. 마치 반복문의 continue처럼. 혹은 바깥으로 빼서 break처럼 쓸 수도 있다.
 
 ### Ranges
 (포함여부)`in` 연산자로 수가 주어진 범위에 포함되는지 확인한다.
@@ -667,3 +689,4 @@ data
   - statement :  수행할 작업을 나타내는 명령형 프로그래밍 언어에서, 가장 작은 독립 실행 요소이다.
   - expression : 프로그래밍 언어가 다른 값을 산출하기 위해 해석하고 계산하는 하나 이상의 명시적 값, 상수, 변수, 연산자 및 함수의 조합이다. 변수선언/할당, 지역 클래스 선언은 표현식이 아니다.
   - 모든 Kotlin함수는 적어도 `unit`을 반환하기 때문에 표현식이다. 리턴유형을 지정하지 않은 java함수 호출은 표현식이 아니다. Kotlin 값 할당은 표현식이 아니나, java는 할당된 값을 반환하기 때문에 표현식이다. java에서 제어구조(if, switch)의 모든 용도는 표현식이 아니지만, kotlin은 값을 반환하는 것을 허용하므로 표현식이다.
+    - 그런데 Kotlin 1.3부터는 when절 내부에 val 변수할당 표현식을 사용할 수 있고, 해당 변수는 when내부에서만 유효하다.
