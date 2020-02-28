@@ -334,12 +334,13 @@ val list = listOf("a", "b", "c")
 ```
 변경가능한 리스트는 MutableList또는 ArrayList클래스를 이용한다. 생성자를 이용할 수도 있고, mutableListOf()같이 함수로 초기화할 수도 있다.  
   
-요약하면
-콜렉션 | Immutable | Mutable
----- | --------- | -------
-List | listOf | mutableListOf, arrayListOf
-Set | setOf | mutableSetOf, hashSetOf, linkedSetOf, sortedSetOf
-Map | mapOf | mutableMapOf, hashMapOf, linkedMapOf, sortedMapOf
+요약하면  
+
+| 콜렉션 | Immutable | Mutable |
+| --------- | --------- | --------- |
+| List | listOf | mutableListOf, arrayListOf |
+| Set | setOf | mutableSetOf, hashSetOf, linkedSetOf, sortedSetOf |
+| Map | mapOf | mutableMapOf, hashMapOf, linkedMapOf, sortedMapOf |
 
 >REF : [Collections - List, Set, Map](https://m.blog.naver.com/PostView.nhn?blogId=yuyyulee&logNo=221237499417&proxyReferer=https%3A%2F%2Fwww.google.com%2F)
 
@@ -384,6 +385,7 @@ class MainActivity : AppCompatActivity() {
 ```
 
 >NOTE: lateinit키워드로 non-null 프로퍼티가 생성자 시점에 null이어도 정상 컴파일 되도록 강제할 수 있다.  
+
 >NOTE: 세부내용은 다음 링크를 참조,[by lazy는 어떻게 동작하는가](https://medium.com/til-kotlin-ko/kotlin-delegated-property-by-lazy%EB%8A%94-%EC%96%B4%EB%96%BB%EA%B2%8C-%EB%8F%99%EC%9E%91%ED%95%98%EB%8A%94%EA%B0%80-74912d3e9c56)
 
 ### Extension Functions
@@ -505,6 +507,7 @@ val param = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
 }
 ```
 > NOTE: run은 호출한 객체를 블록의 리시버로 전달하고 블록의 결과값을 반환한다. 이미 생성된 객체에 대하여 연속된 작업이 필요할 때 사용한다.  
+
 > NOTE: with은 인자로 받는 객체를 블록의 리시버로 전달하며 블록의 결과값을 반환한다. run은 객체.run이고 with은 with(객체)이다. 리시버로 전달할 객체 위치가 다르다.
 
 ### Single-expression function
@@ -604,7 +607,52 @@ fun calcTaxes(): BigDecimal = TODO("Waiting for feedback from accounting")
 Kotlin표준 라이브러리에는 `todo()`함수가 있다. 언제나 `NotImplementedError` 예외를 던진다. 리턴타입은 `Nothing`인데 그래서 어디든 기대되는 타입과 무관하게 쓸 수 있다. 구현안된 이유를 인자로 넘기는 식으로 오버로딩도 가능하다. 인텔리J에서는 `todo()`를 자동으로 인식해 `TODO`창에서 볼 수 있다.
 
 ## Coding Conventions
-//TODO https://kotlinlang.org/docs/reference/coding-conventions.html
+이 스타일 가이드대로 포맷팅하려면 IntelliJ에서 Kotlin플러그인 1.2.20이상을 설치하고 Settings-Editor-CodeStyle-Kotlin에서 Set From...링크로 들어간다. PredefinedStyle-KotlinStyleGuide를 선택한다.  
+
+스타일 가이드를 만족하는지 확인하려면 inspectionSetting메뉴에서 Kotlin-Styleissues-File is not formatted according to project settings를 선택한다.  
+
+`Ctrl+Alt+L`누르면 잘 다듬어준다.
+
+이하 번역은 다음 문서를 참조하라
+- [ko, Kotlin coding convention](https://github.com/AgustaRC/Dev-Log/blob/master/%5BKotlin%5D%20Coding%20Conventions.md)
+- [간추린 Kotlin coding convention](https://medium.com/@joongwon/kotlin-%EC%BD%94%EB%94%A9-%EC%BB%A8%EB%B2%A4%EC%85%98-%EC%A0%95%EB%A6%AC-7681cde920ce)
+
+- tab대신 4spaces
+- camelCase
+- 중괄호는 그 구조가 시작되는 줄 끝에서 연다.
+- 클래스 헤더가 길 경우 중괄호를 그 다음줄에서 연다.
+- 제어자를 여러 개 기술할 때는 다음 순서를 따른다. 어노테이션은 제어자 앞.
+```
+public / protected / private / internal
+expect / actual
+final / open / abstract / sealed / const
+external
+override
+lateinit
+tailrec
+vararg
+suspend
+inner
+enum / annotation
+companion
+inline
+infix
+operator
+data
+```
+- 여러줄에 걸쳐 체이닝 호출할 때 `.`과 `?.`는 개행처리한다.
+- 컬렉션 인스턴스는 가급적 immutable 타입으로 생성하라.
+- 범위지정시 1..9보다 1 until 10을 써라
+- 라이브러리 작성할 때 API안전성을 보장하기 위해 멤버가시성을 명시적으로 지정하고, 함수의 반환타입/속성타입을 명시적으로 지정하고, 모든 public멤버에 대한 주석을 제공하여 문서생성을 지원한다.  
+
+>NOTE: 두고보자!!
+- #? typealias
+- #? lamda : pram, return
+- #? Nullable Boolean
+- #? function & property
+- #? extension function
+- #? infix function
+- #? factory function
 
 ## Lexical grammar
 - documenation : `/** */`으로 마크다운/javadoc형식 문서를 작성할 수 있다
