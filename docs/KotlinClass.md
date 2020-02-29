@@ -156,24 +156,104 @@ abstract class Rectangle : Polygon() {
 
 ## Properties and Fields
 
+### Declaring Properties
+여기서 초기화 코드랑 getter/setter는 선택이다.
+```
+var <propertyName>[: <PropertyType>] [= <property_initializer>]
+    [<getter>]
+    [<setter>]
+```
+nullable은 초기화해줘야 하고, 타입추론 가능하면 타입명 안써도 된다.
+```
+var allByDefault: Int? // error: explicit initializer required, default getter and setter implied
+var initialized = 1 // has type Int, default getter and setter
+```
+get/set코드는 아래처럼 쓸 수 있다. 매개인자 이름은 기본적으로 value다.
+```
+var heapSize: Int
+    get() = this.size
+	set(value) {
+        value.todo("set heapSize as value")
+    }
+```
+Kotlin클래스는 바로 field를 선언할 수 없는데, 프로퍼티에 backing field가 필요하면 Kotlin에서 자동으로 제공해준다. `field`식별자로 참조할 수 있다.
+```
+var firstName : String
+    set(value) { firstName = value } //stackoverflow!! 
+				//이 코드는 다음과 같다 : { set(value) } 무한재귀호출..
+    set(value) { field = value }
+```
+싫으면 이렇게 해도 되고.
+```
+private var _table : Map<String, Int>? = null
+public val table: Map<String, Int>
+    get() {
+	    if(_table == null){
+		   _table = HashMap()
+		}
+		return _table ?: throw AssertionError("Set to null by another thread")
+	}
+```
 
+### Complie-Time Constants
+컴파일 시점에 읽을수만 있는 프로퍼티라면 `const`modifier로 표시한다. 다음 조건을 충족한다.
+- top-level(전역), 또는 object declaration, companion object의 멤버
+- String이나 원시값으로 초기화됨
+- cumstom getter가 없다
+어노테이션에 쓸 수 있다.
+```
+const val SUBSYSTEM_DEPRECATED: String = "This subsystem is deprecated"
+@Deprecated(SUBSYSTEM_DEPRECATED) fun foo() { ... }
+```
 
+[Kotlin Annotation](https://kotlinlang.org/docs/reference/annotations.html)은 코드에 메타데이터 추가하는 것이다.
+  - meta-annotations : `annotation class ANNOTATION_NAME`과 같이 커스텀 어노테이션 만들 수 있는데, 그 위에 아래와 같은 메타 어노테이션을 붙일 수 있다.
+    - `@Target` : 대상을 이하 괄호 안에, class/function/property/expression/...etc
+	- `@Retention` : 컴파일된 클래스 파일 안에 저장되는지, 런타임시 보이는지
+	- `@Repeatable` : 같은 어노테이션을 같은 element에 여러 번 쓸 수 있는지
+	- `@MustbeDocumented` : 문서작업하란뜻
+  - 쓸때는 이렇게 쓰면됨
+```
+//class declaration
+@Fancy class Foo(val why: String) { //매개인자를 가질 수도 있다
+    @Fancy fun baz(@Fancy foo: Int): Int {
+        return (@Fancy 1)
+    }
+}
 
+//primary constructor
+class Foo @Inject constructor(dependency: MyDependency) { ... }
 
+//property accessor
+class Foo {
+    var x: MyDependency? = null
+        @Inject set
+}
 
+//lamda
+annotation class Suspendable
+val f = @Suspendable { Fiber.sleep(10) }
+```
 
+### Late-Initialized Properties and variables
+null아닌 프로퍼티는 생성자에서 초기화되어야 하는데, 이게 불편할 때가 있다. 의존성주입, 단위테스트 셋업 등 자체 생애주기가 있을 때 그렇다. 그렇다고 null참조 오류 여부를 매번 확인하기가 어려울때면 이렇게 하면 된다. `lateinit`프로퍼티를 초기화전에 참조하면 다른 오류와 구별되는 예외가 던져진다.
+```
+public class MyTest {
+    lateinit var subject: TestSubject
 
+    @SetUp fun setup() {
+        subject = TestSubject()
+    }
 
+    @Test fun test() {
+        subject.method()  // dereference directly
+    }
+}
+```
+Kt1.2부터는 `.isInitialized`사용하면 된다.
 
+### Overriding Property
+알지?
 
-
-
-
-
-
-
-
-
-
-
-
+### Delegated Property
+프로퍼티는 대부분 backing field를 읽어오거나, 해당 field에 직접 쓰기도 한다. 사용자가 직접 정의할 수도 있고. 주로 `lazy value`, 주어진 key로 map에서 읽어오기, DB접근, 리스너 알려주기 등이 있는데, 이런건 [#?delegated properties](https://kotlinlang.org/docs/reference/delegated-properties.html)사용하는 라이브러리에 구현되어 있다.
