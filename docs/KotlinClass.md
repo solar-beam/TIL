@@ -544,6 +544,7 @@ data class User(val name: String, val age: Int)
 - `toString()` : "User(name=John, age=42"같은 형태로
 - 선언순서대로 `component1()`, `component2()`... 함수
 - `copy()`
+>NOTE: ComponentN함수는 ??????????? 다음에 araboza.. #?두고보자! [destructuring declaration](https://kotlinlang.org/docs/reference/multi-declarations.html)
 
 데이터 클래스는 다음 조건을 만족해야 한다. 신뢰성을 보장하고 의미없는 코드 생성을 막기 위해서다.
 - primary생성자는 하나 이상의 매개인자를 가져야 한다
@@ -551,21 +552,48 @@ data class User(val name: String, val age: Int)
 - 데이터 클래스는 `abstract`, `open`, `sealed`, `inner`여야 한다
 - (1.1이전) 데이터 클래스는 인터페이스만을 구현할 수 있다(이젠 아니지롱)
 
+아울러서, 멤버생성은 멤버상속에 맞춰 다음 규칙에 따른다.
+- 데이터 클래스 몸체에 `equals()`, `hashCode()`, `toString()` 함수를 명시적으로 구현되어있거나 상위 클래스에 `final`로 구현되어 있으면, 앞서말한 함수는 자동으로 생성되는 게 아니라 기존에 있는 함수를 쓴다.
+- 슈퍼타입이 open이나 호환되는 signature(함수명/매개인자)를 반환하는 componentN함수를 가지고 있다면,해당 함수를 오버라이드 하는 함수가 생성된다. 만약 슈퍼타입이 signature가 호환되지 않거나 final때문에 재정의를 할 수 없다면, 오류가 보고된다. *#? If a **supertype** has the componentN() functions that are open and return **compatible types**, the corresponding functions are generated for the data class and override those of the supertype. If the functions of the supertype cannot be overridden due to **incompatible signatures** or being final, an error is reported;*
+- 카피함수가 있는 타입으로부터 데이터클래스를 뽑아내는건 1.2부터 막혔다 *#? Deriving a data class from a type that already has a copy(...) function with a **matching signature** is deprecated in Kotlin 1.2 and is prohibited in Kotlin 1.3.*
+- `componentN()`과 `copy()` 함수를 명시적으로 구현할 수는 없다.
+>NOTE: 메소드 시그니처란 메소드의 입출력을 정의하는 것으로, 매개인자와 그 타입, 반환값과 타입, 발생할 수 있는 예외, 메소드 접근권한 정보를 포함한다.
 
+코틀린1.1부터는 다른 클래스를 확장할 수도 있다. JVM에서, 생성된 클래스에 매개인자 없는 생성자가 필요하다면 모든 프로퍼티에 대하여 기본값을 지정해줘야 한다.
+```
+data class User(val name: String = "", val age: Int = 0)
+```
 
+### Properties Declared in the Class Body
+데이터 클래스에 자동으로 만들어주는 함수에서는, 기본생성자에서 정의된 함수만 사용한다는 점에 유의하자. 자동생성함수에서 접근못하게 하려면, 클래스 몸체 내부에 선언하면 된다. 그래서 생성자 헤더에 선언된 프로퍼티가 모두 동일하면(equal함수 내부에 정의된대로), 클래스 몸체에 선언된 프로퍼티는 다르더라도 두 객체는 같은 것으로 인정된다. 다음코드의 결과값은 true다.
+```
+data class Person(val name: String){
+  var age: Int = 0
+}
 
+val person1 = person("John")
+val person2 = person("John")
+person1.age = 10
+person2.age = 2
+println(person1==person2)
+```
 
+### Copying
+객체에서 어떤 프로퍼티는 바꾸고, 나머지는 그대로 남겨놓은채로 복제를 해야할 경우가 종종 있다. 이럴때 `copy()`함수가 쓰인다. 이를테면 아래와 같다.
+```
+fun copy(name: String = this.name, age: Int = this.age) = User(name, age)
 
+val jack = User(name = "Jack", age = 1)
+val olderJack = jack.copy(age = 1) //잭에게 떡국을 한그릇 줬다
+```
 
+### Data Classes and Destructuring Declarations
+>#?두고보자! [destructuring declaration](https://kotlinlang.org/docs/reference/multi-declarations.html)
+```
+val jane = User("Jane", 35) 
+val (name, age) = jane
+println("$name, $age years of age") // prints "Jane, 35 years of age"
+```
 
-
-
-
-
-
-
-
-
-
-
-
+### Standard Data Classes
+표준 데이터 클래스는 `Pair`, `Triple`을 제공한다. 그런데 대부분 이름 있는 클래스가 더 낫다. 프로퍼티에 더 읽기좋고 의미있는 이름을 붙일 수 있기 때문이다.
