@@ -119,6 +119,7 @@ class FilledRectangle: Rectangle() {
 
 ### Overriding rules
 다중상속인데, 직전 super클래스의 멤버 구현이 서로 다를 경우, sub클래스도 멤버를 재정의해야 한다. 이때 `super<SUPERCLASS_NAME>`키워드로 super클래스 참조할 수 있다. 
+
 ```
 open class Rectangle {
     open fun draw() { /* ... */ }
@@ -139,6 +140,7 @@ class Square() : Rectangle(), Polygon {
 
 ### Abstract classes
 추상클래스는 멤버를 내부에 구현하지 않아도 된다. 추상클래스는 기본적으로 open이다. non-abstract open멤버를 추상클래스에서 오버라이드할 수 있다.
+
 ```
 open class Polygon {
     open fun draw() {}
@@ -201,18 +203,20 @@ public val table: Map<String, Int>
 - String이나 원시값으로 초기화됨
 - cumstom getter가 없다
 어노테이션에 쓸 수 있다.
+
 ```
 const val SUBSYSTEM_DEPRECATED: String = "This subsystem is deprecated"
 @Deprecated(SUBSYSTEM_DEPRECATED) fun foo() { ... }
 ```
 
-[Kotlin Annotation](https://kotlinlang.org/docs/reference/annotations.html)은 코드에 메타데이터 추가하는 것이다.
-  - meta-annotations : `annotation class ANNOTATION_NAME`과 같이 커스텀 어노테이션 만들 수 있는데, 그 위에 아래와 같은 메타 어노테이션을 붙일 수 있다.
-    - `@Target` : 대상을 이하 괄호 안에, class/function/property/expression/...etc
-	- `@Retention` : 컴파일된 클래스 파일 안에 저장되는지, 런타임시 보이는지
-	- `@Repeatable` : 같은 어노테이션을 같은 element에 여러 번 쓸 수 있는지
-	- `@MustbeDocumented` : 문서작업하란뜻
-  - 쓸때는 이렇게 쓰면됨
+- [Kotlin Annotation](https://kotlinlang.org/docs/reference/annotations.html)은 코드에 메타데이터 추가하는 것이다.
+- meta-annotations : `annotation class ANNOTATION_NAME`과 같이 커스텀 어노테이션 만들 수 있는데, 그 위에 아래와 같은 메타 어노테이션을 붙일 수 있다.
+  - `@Target` : 대상을 이하 괄호 안에, class/function/property/expression/...etc
+  - `@Retention` : 컴파일된 클래스 파일 안에 저장되는지, 런타임시 보이는지
+  - `@Repeatable` : 같은 어노테이션을 같은 element에 여러 번 쓸 수 있는지
+  - `@MustbeDocumented` : 문서작업하란뜻
+- 쓸때는 이렇게 쓰면됨
+
 ```
 //class declaration
 @Fancy class Foo(val why: String) { //매개인자를 가질 수도 있다
@@ -237,6 +241,7 @@ val f = @Suspendable { Fiber.sleep(10) }
 
 ### Late-Initialized Properties and variables
 null아닌 프로퍼티는 생성자에서 초기화되어야 하는데, 이게 불편할 때가 있다. 의존성주입, 단위테스트 셋업 등 자체 생애주기가 있을 때 그렇다. 그렇다고 null참조 오류 여부를 매번 확인하기가 어려울때면 이렇게 하면 된다. `lateinit`프로퍼티를 초기화전에 참조하면 다른 오류와 구별되는 예외가 던져진다.
+
 ```
 public class MyTest {
     lateinit var subject: TestSubject
@@ -250,6 +255,7 @@ public class MyTest {
     }
 }
 ```
+
 Kt1.2부터는 `.isInitialized`사용하면 된다.
 
 ### Overriding Property
@@ -257,3 +263,309 @@ Kt1.2부터는 `.isInitialized`사용하면 된다.
 
 ### Delegated Property
 프로퍼티는 대부분 backing field를 읽어오거나, 해당 field에 직접 쓰기도 한다. 사용자가 직접 정의할 수도 있고. 주로 `lazy value`, 주어진 key로 map에서 읽어오기, DB접근, 리스너 알려주기 등이 있는데, 이런건 [#?delegated properties](https://kotlinlang.org/docs/reference/delegated-properties.html)사용하는 라이브러리에 구현되어 있다.
+
+## Interfaces
+코틀린 인터페이스는 추상 메소드를 선언하고, 또 정의할 수 있다. 추상 클래스와 다른 점은 '상태'를 저장할 수 없다는 점이다. 프로퍼티를 가질 수는 있지만 추상 프로퍼티거나 accessor를 정의해두어야 한다. 이때 backing field를 가질 수 없어 결론적으로 accessor는 자신을 참조할 수 없다.
+```
+interface Myinterface {
+  fun bar()
+  fun foo() {
+    //body is optional
+  }
+}
+```
+클래스/객체는 아래와 같이 하나 이상의 인터페이스를 구현할 수 있다.
+```
+class Child : MyInterface {
+  override fun bar() {
+    //body
+  }
+}
+```
+인터페이스가 다른 인터페이스를 상속할 수도 있는데, 함수/프로퍼티를 재정의할 수 있다. 
+
+```
+interface Named {
+    val name: String
+}
+
+interface Person : Named {
+    val firstName: String
+    val lastName: String
+    override val name: String get() = "$firstName $lastName"
+}
+
+data class Employee(
+    // implementing 'name' is not required
+    override val firstName: String,
+    override val lastName: String,
+    val position: Position
+) : Person
+```
+
+클래스가 여러 개 인터페이스를 구현할 때는, 아래와 같이 경우에 따라 재정의해주어야 한다. C를 보면, A에서 bar가 정의되어 있지 않으므로 재정의하고 있다. D에서는 오버라이드 충돌을 막기 위해 재정의하고 있다.
+
+```
+interface A {
+    fun foo() { print("A") }
+    fun bar()
+}
+
+interface B {
+    fun foo() { print("B") }
+    fun bar() { print("bar") }
+}
+
+class C : A {
+    override fun bar() { print("bar") }
+}
+
+class D : A, B {
+    override fun foo() {
+        super<A>.foo()
+        super<B>.foo()
+    }
+    override fun bar() {
+        super<B>.bar()
+    }
+}
+```
+
+## Visibility Modifiers
+getter는 언제나 visibility modifier(이하 'VM')을 가지고, 그밖에 class/object/interface/constructor/function/property/setter는 선택사항이다. VM에는 네 종류가 있다. 디폴트는 public이다.
+
+| 구분 | package | class&Interface | Constructor |
+| ----- | ----- | ----- | ----- | ----- |
+| private | 선언된 파일안에서만 접근할 수 있다 | 해당 클래스 안에서만 | 클래스 안에서만 |
+| protected | top-level(전역) 선언부에서 불가 | 하위 클래스까지만 |  |
+| internal | 같은 모듈이면 어디서든 | 같은 모듈에서 클래스 볼수있는 범위까지 |    |
+| public | 제한없음 | 제한없음 | 제한없으나, 포함된 클래스 볼 수 있는 범위까지 | 
+
+- 다른 패키지는 여전히 `import`로 포함시킨다
+- `constructor` 디폴트 VM은 `public`이다
+- `module`은 함께 컴파일된 코틀란 파일 집합으로, IDE모듈/Maven프로젝트/Gradle소스집합/Ant에서 한번에 컴파일된 묶음을 가리킨다.
+
+## Extensions
+Decorator패턴을 사용하거나 다른 클래스를 상속하지 않고도, 클래스를 확장할 수 있다. `extensions`라 부르는데, 서드파티 라이브러리에서 변경할 수 없는 함수를 새로 쓸 수가 있다. 원래부터 해당 클래스의 메소드인 것처럼 호출만 하면 된다. 이런 방식을 `extenstion function`이라 부르는데, `extenstion property`도 있다.
+
+### Extension function
+`this`키워드는 리시버객체와 대응하는데, 리시버란 점 바로앞에서 호출한 함수 매개인자로 던져지는 객체를 가리킨다.
+```
+fun MutableList<Int>.swap(index1: Int, index2: Int) {
+    val tmp = this[index1] // 'this' corresponds to the list
+    this[index1] = this[index2]
+    this[index2] = tmp
+}
+```
+### Extension, resolved statically
+확장함수는 호출되는 리시버의 클래스에 대응한다. 반환되는 결과값하고는 무관하다. 이를테면 아래에서 마지막 코드의 결과값은 "Shape"인데, 매개인자로 Shape클래스를 던졌기 때문이다.
+
+```
+open class Shape
+
+class Rectangle: Shape()
+
+fun Shape.getName() = "Shape"
+
+fun Rectangle.getName() = "Rectangle"
+
+fun printClassName(s: Shape) {
+    println(s.getName())
+}    
+
+printClassName(Rectangle())
+```
+
+어떤 클래스에 확장함수와 동일한 멤버함수가 있다면, 멤버쪽이 우선시된다. 아래 코드의 결과값은 "Class method"다.
+
+```
+class Example {
+    fun printFunctionType() { println("Class method") }
+}
+
+fun Example.printFunctionType() { println("Extension function") }
+
+Example().printFunctionType()
+```
+
+그런데 매개인자를 다르게 오버라이드 하는건 된다.
+
+```
+class Example {
+    fun printFunctionType() { println("Class method") }
+}
+
+fun Example.printFunctionType(i: Int) { println("Extension function") }
+
+Example().printFunctionType(1)
+```
+
+### Nullable receiver
+nullable리리버에서도 호출할 수 있는데, 그럴땐 코드 내부에서 `this==null`코드로 확인해주면 된다. 아래 코드의 결과값은 "null exception"이며, null체크를 안해주면 코드 내부는 스킵한다.
+
+```
+class Example{
+    fun printFunctionType(){ println("Class method\n") }
+}
+
+fun Example?.printFunctionType(){ 
+    if(this==null){
+        println( "null exception\n" )
+        return
+    }
+    println("Extension function\n") 
+}
+
+Example().printFunctionType()
+val e :Example? = null
+e.printFunctionType()
+```
+
+### Extension properties
+확장프로퍼티는 backing field를 가질 수 없고, 그래서 직접 초기화도 할 수가 없다. 반드시 명시적인 getter/setter를 통해서 정의해야 한다.
+```
+//OK
+val <T> List<T>.lastIndex: Int
+    get() = size - 1
+	
+//ERR
+val House.number = 1
+```
+
+### Companion object extensions
+>#? 두고보자
+
+### Scope of extensions
+일반적으로 패키지 아래에 top-level에서 확장을 정의한다.
+```
+package org.example.declarations
+ 
+fun List<String>.getLongestString() { /*...*/}
+```
+패키지 밖에서도 사용하려면 아래와 같이 호출한다.
+```
+package org.example.usage
+
+import org.example.declarations.getLongestString
+
+fun main() {
+    val list = listOf("red", "green", "blue")
+    list.getLongestString()
+}
+```
+
+### Declaring extensions as members
+클래스 내부에 다른 클래스에 대한 확장을 선언할수도 있다. 그런데, 확장함수의 예를 들어 설명하면, 그 내부에서 리시버를 명시적으로 기술하지 않기 때문에 주의해야 한다. 이런 클래스의 인스턴스는 *dispatch receiver*라 하고, 확장메소드 리시버 클래스의 인스턴스는 *extension receiver*라 한다. 사실 이름 따위는 중요치 않다. 까라해라. 머리만 복잡하다.
+```
+class Host(val hostname: String) {
+    fun printHostname() { print(hostname) }
+}
+
+class Connection(val host: Host, val port: Int) {
+     fun printPort() { print(port) }
+
+     fun Host.printConnectionString() {
+         printHostname()   // calls Host.printHostname() 리시버표시 X
+         print(":")
+         printPort()   // calls Connection.printPort() 리시버표시 X
+     }
+
+     fun connect() {
+         /*...*/
+         host.printConnectionString()   // calls the extension function 확장리시버 인스턴스에서 메소드를 호출하고 있다
+     }
+}
+
+fun main() {
+    Connection(Host("kotl.in"), 443).connect()
+    //Host("kotl.in").printConnectionString(443)  // error, the extension function is unavailable outside Connection
+}
+```
+dispatch/extension 리시버간 멤버 이름이 충돌할 경우, extension(원래 클래스의) 멤버가 우선한다. dispatch(확장함수 정의한 클래스의) 멤버를 호출할 때는 this를 이용.
+```
+class Connection {
+    fun Host.getConnectionString() {
+        toString()         // calls Host.toString()
+        this@Connection.toString()  // calls Connection.toString()
+    }
+}
+```
+확장함수/프로퍼티는 `open`으로 정의해서 하위클래스에서 재정의할 수 있다. 무슨 의미냐면, 확장함수는 리시버 클래스 타입을 따라 호출되는 것이 아니라, 호출되어 넘겨진 여기서는 `call()`의 매개인자 타입에 따라 호출된다.
+```
+open class Base { }
+
+class Derived : Base() { }
+
+open class BaseCaller {
+    open fun Base.printFunctionInfo() {
+        println("Base extension function in BaseCaller")
+    }
+
+    open fun Derived.printFunctionInfo() {
+        println("Derived extension function in BaseCaller")
+    }
+
+    fun call(b: Base) {
+        b.printFunctionInfo()   // call the extension function
+    }
+}
+
+class DerivedCaller: BaseCaller() {
+    override fun Base.printFunctionInfo() {
+        println("Base extension function in DerivedCaller")
+    }
+
+    override fun Derived.printFunctionInfo() {
+        println("Derived extension function in DerivedCaller")
+    }
+}
+
+fun main() {
+    BaseCaller().call(Base())   // "Base extension function in BaseCaller"
+    DerivedCaller().call(Base())  // "Base extension function in DerivedCaller" - dispatch receiver is resolved virtually
+    DerivedCaller().call(Derived())  // "Base extension function in DerivedCaller" - extension receiver is resolved statically
+}
+```
+>NOTE: JAVA는 런타임 시점에 호출하는 확장함수를 결정하지만, Kotlin은 컴파일 시점에 결정한다. super클래스로 선언된 sub클래스 객체 인스턴스에 대하여, Kotlin은 super클래스 함수가 호출된다. 잘 모르겠으면 다음 글을 보자. [kotlin extension의 동작 원리](https://medium.com/@joongwon/kotlin-kotlin-extensions-%EC%9D%98-%EB%8F%99%EC%9E%91-%EC%9B%90%EB%A6%AC-ea1759b8d556)
+
+### Visibility
+- 리시버가 정의된 파일의 private멤버에 접근할 수 있다.
+- 확장함수가 리시버 클래스 외부에서 정의되었다면, 리시버 클래스 private멤버에는 접근할 수 없다.
+- 결론 : 확장함수는 정의된 시점의 파일/클래스에 visibility가 귀속된다.
+
+## Data Classes
+데이터를 담기 위한 클래스를 만들기도 하는데, 그런 클래스에는 standard functionality와 utility function이 데이터에 따라 기계적으로 정해진다. 코틀린에서는 그런 클래스를 *data class*라 하고 `data`키워드로 표시한다.
+```
+data class User(val name: String, val age: Int)
+```
+
+컴파일러는 primary생성자에 선언된 변수에 대하여 다음 멤버를 자동으로 만들어준다.  
+- `equals()`/`hashCode()`
+- `toString()` : "User(name=John, age=42"같은 형태로
+- 선언순서대로 `component1()`, `component2()`... 함수
+- `copy()`
+
+데이터 클래스는 다음 조건을 만족해야 한다. 신뢰성을 보장하고 의미없는 코드 생성을 막기 위해서다.
+- primary생성자는 하나 이상의 매개인자를 가져야 한다
+- 모든 primary생성자 매개인자는 `val`이나 `var`로 표기해야 한다
+- 데이터 클래스는 `abstract`, `open`, `sealed`, `inner`여야 한다
+- (1.1이전) 데이터 클래스는 인터페이스만을 구현할 수 있다(이젠 아니지롱)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
