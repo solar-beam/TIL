@@ -7,6 +7,7 @@
 ## On-going
 - 100ÀÏÄÚµù
 - c++ STL & algorithm
+- kotlin basic
 
 ## To-do
 - Kotlin/android side project

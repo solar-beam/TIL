@@ -264,6 +264,8 @@ Kt1.2부터는 `.isInitialized`사용하면 된다.
 ### Delegated Property
 프로퍼티는 대부분 backing field를 읽어오거나, 해당 field에 직접 쓰기도 한다. 사용자가 직접 정의할 수도 있고. 주로 `lazy value`, 주어진 key로 map에서 읽어오기, DB접근, 리스너 알려주기 등이 있는데, 이런건 [#?delegated properties](https://kotlinlang.org/docs/reference/delegated-properties.html)사용하는 라이브러리에 구현되어 있다.
 
+-----
+
 ## Interfaces
 코틀린 인터페이스는 추상 메소드를 선언하고, 또 정의할 수 있다. 추상 클래스와 다른 점은 '상태'를 저장할 수 없다는 점이다. 프로퍼티를 가질 수는 있지만 추상 프로퍼티거나 accessor를 정의해두어야 한다. 이때 backing field를 가질 수 없어 결론적으로 accessor는 자신을 참조할 수 없다.
 ```
@@ -331,11 +333,13 @@ class D : A, B {
 }
 ```
 
+-----
+
 ## Visibility Modifiers
 getter는 언제나 visibility modifier(이하 'VM')을 가지고, 그밖에 class/object/interface/constructor/function/property/setter는 선택사항이다. VM에는 네 종류가 있다. 디폴트는 public이다.
 
 | 구분 | package | class&Interface | Constructor |
-| ----- | ----- | ----- | ----- | ----- |
+| --------- | --------- | --------- | --------- | 
 | private | 선언된 파일안에서만 접근할 수 있다 | 해당 클래스 안에서만 | 클래스 안에서만 |
 | protected | top-level(전역) 선언부에서 불가 | 하위 클래스까지만 |  |
 | internal | 같은 모듈이면 어디서든 | 같은 모듈에서 클래스 볼수있는 범위까지 |    |
@@ -344,6 +348,8 @@ getter는 언제나 visibility modifier(이하 'VM')을 가지고, 그밖에 cla
 - 다른 패키지는 여전히 `import`로 포함시킨다
 - `constructor` 디폴트 VM은 `public`이다
 - `module`은 함께 컴파일된 코틀란 파일 집합으로, IDE모듈/Maven프로젝트/Gradle소스집합/Ant에서 한번에 컴파일된 묶음을 가리킨다.
+
+-----
 
 ## Extensions
 Decorator패턴을 사용하거나 다른 클래스를 상속하지 않고도, 클래스를 확장할 수 있다. `extensions`라 부르는데, 서드파티 라이브러리에서 변경할 수 없는 함수를 새로 쓸 수가 있다. 원래부터 해당 클래스의 메소드인 것처럼 호출만 하면 된다. 이런 방식을 `extenstion function`이라 부르는데, `extenstion property`도 있다.
@@ -533,6 +539,8 @@ fun main() {
 - 확장함수가 리시버 클래스 외부에서 정의되었다면, 리시버 클래스 private멤버에는 접근할 수 없다.
 - 결론 : 확장함수는 정의된 시점의 파일/클래스에 visibility가 귀속된다.
 
+-----
+
 ## Data Classes
 데이터를 담기 위한 클래스를 만들기도 하는데, 그런 클래스에는 standard functionality와 utility function이 데이터에 따라 기계적으로 정해진다. 코틀린에서는 그런 클래스를 *data class*라 하고 `data`키워드로 표시한다.
 ```
@@ -597,3 +605,262 @@ println("$name, $age years of age") // prints "Jane, 35 years of age"
 
 ### Standard Data Classes
 표준 데이터 클래스는 `Pair`, `Triple`을 제공한다. 그런데 대부분 이름 있는 클래스가 더 낫다. 프로퍼티에 더 읽기좋고 의미있는 이름을 붙일 수 있기 때문이다.
+
+-----
+
+## Sealed Classes
+'Sealed Class'는 제약된 클래스 위계구조를 구현하기 위해 쓰이는데, 제한된 그룹의 변수형만을 사용해야 한다. 다시 말해, 'enum class'의 확장으로서, 타입이 제한되어 있고 enum상수는 인스턴스는 하나만 존재할 수 있으나, sealed sub클래스는 인스턴스를 여러 개 가질 수 있다.
+>#? ENUM CLASS가 뭘까...
+ 
+```
+sealed class Expr
+data class Const(val number: Double) : Expr()
+data class Sum(val e1: Expr, val e2: Expr) : Expr()
+object NotANumber : Expr()
+```
+
+- 아래와 같이 `sealed` modifier로 선언할 수 있고, sub클래스는 같은 파일에서만 선언할 수 있다.
+- sealed클래스는 `abstract`클래스지만, 바로 인스턴스를 생성할 수 있고 `abstract`멤버도 가질 수 있다.
+- sealed클래스는 `private` 생성자만 가질 수 있다(디폴트가 `private`)
+- sealed클래스를 직접 상속하려면 같은 파일에 클래스를 정의해야 하나, sub클래스를 재상속하면 같은 파일이 아니어도 된다.
+- sealed클래스의 이점은 `when`을 반환값이 있는 expression으로 사용할 때로, 아래와 같이 `else`를 생각하지 않고 코드를 짤 수 있다.
+
+```
+fun eval(expr: Expr): Double = when(expr) {
+    is Const -> expr.number
+    is Sum -> eval(expr.e1) + eval(expr.e2)
+    NotANumber -> Double.NaN
+    // the `else` clause is not required because we've covered all the cases
+}
+```
+
+-----
+
+## Generic
+
+Java에서처럼, Kotlin도 클래스에 타입 매개인자를 가진다.
+```
+//클래스
+class Box<T>(t: T){
+  var value = t
+}
+
+//인스턴스
+val box: Box<Int> = Box<Int>(1)
+val box = Box(1) //타입추론
+```
+
+Java에는 wildcard type이 있다면, Kotlin에는 **declaration-site variance**와 **type projection**이 있다.
+
+
+### Java wildcard type
+>#?wildcard type : it is a type argument of a parameterized type. ([참고1: Generic FAQ](http://www.angelikalanger.com/GenericsFAQ/JavaGenericsFAQ.html), [참고2: Use bounfrf wildcards to increase API flexibility](https://www.oracle.com/technetwork/java/effectivejava-136174.html))
+
+자바에서 제네릭타입은 invariant인데, 다시말해 `List<String>`은 `List<Object>`의 서브클래스가 아니라는 것이다. 왜 그러하냐면, List가 invariant가 아니라면, 다음 코드에서 런타임 예외가 발생해 자바 배열보다 좋을 것이 없다. 집어넣을 때는 Object라서 1을 넣을 수 있었는데, 빼는 시점에서는 String으로 캐스팅이 안되어 예외가 발생한다.
+```
+// Java
+List<String> strs = new ArrayList<String>();
+List<Object> objs = strs; // !!! The cause of the upcoming problem sits here. Java prohibits this!
+objs.add(1); // Here we put an Integer into a list of Strings
+String s = strs.get(0); // !!! ClassCastException: Cannot cast Integer to String
+```
+그런데 다음과 같이 전혀 문제 없는 코드에서도 예외를 던진다.
+```
+// Java
+interface Collection<E> ... {
+  void addAll(Collection<E> items);
+}
+
+void copyAll(Collection<Object> to, Collection<String> from) {
+  to.addAll(from);
+  // !!! Would not compile with the naive declaration of addAll:
+  // Collection<String> is not a subtype of Collection<Object>
+}
+```
+그래서 다음과 같이 코딩을 한다.
+```
+// Java
+interface Collection<E> ... {
+  void addAll(Collection<? extends E> items);
+}
+```
+
+**wildcard type argument** `? extends E`는 E 또는 E 상속한 하위클래스를 매개인자로 받을 수 있다는 뜻이다. E인스턴스를 요소로 갖는 콜렉션을 안전하게 읽어올 수 있다. 하지만 어떤 E하위타입이 오는지 알 수 없기 때문에 변경할 수는 없다. 이로써 `Collection<String>`를 `Collection<? extends Object>`의 하위타입으로 간주할 수 있게 됐다. 어렵게 말하자면, 'the wildcard with extends-bound(upper bound) makes the type covariant'다. you got it?
+
+정리하자면, 읽어들이기만 할 거면 String콜렉션을 정의해도 Object콜렉션으로부터 넘겨받을 수 있다. 쓰기만 할 거면, Object콜렉션을 정의하고 String콜렉션을 넘겨받아서 쓰면 된다. 자바에서는 `List<? super String>`이 `List<Object>`의 **상위타입/supertype**이다.
+
+The latter is called contravariance, and you can only call methods that take String as an argument on List<? super String> (e.g., you can call add(String) or set(int, String)), while if you call something that returns T in List<T>, you don't get a String, but an Object.
+
+Joshua Bloch calls those objects you only read from Producers, and those you only write to Consumers. He recommends: "For maximum flexibility, use wildcard types on input parameters that represent producers or consumers", and proposes the following mnemonic:
+
+PECS stands for Producer-Extends, Consumer-Super.
+
+NOTE: if you use a producer-object, say, List<? extends Foo>, you are not allowed to call add() or set() on this object, but this does not mean that this object is immutable: for example, nothing prevents you from calling clear() to remove all items from the list, since clear() does not take any parameters at all. The only thing guaranteed by wildcards (or other types of variance) is type safety. Immutability is a completely different story.
+
+### Declaration-site variance
+
+Suppose we have a generic interface Source<T> that does not have any methods that take T as a parameter, only methods that return T:
+
+```
+// Java
+interface Source<T> {
+  T nextT();
+}
+```
+Then, it would be perfectly safe to store a reference to an instance of Source<String> in a variable of type Source<Object> – there are no consumer-methods to call. But Java does not know this, and still prohibits it:
+```
+// Java
+void demo(Source<String> strs) {
+  Source<Object> objects = strs; // !!! Not allowed in Java
+  // ...
+}
+```
+To fix this, we have to declare objects of type Source<? extends Object>, which is sort of meaningless, because we can call all the same methods on such a variable as before, so there's no value added by the more complex type. But the compiler does not know that.
+
+In Kotlin, there is a way to explain this sort of thing to the compiler. This is called declaration-site variance: we can annotate the type parameter T of Source to make sure that it is only returned (produced) from members of Source<T>, and never consumed. To do this we provide the out modifier:
+```
+interface Source<out T> {
+    fun nextT(): T
+}
+​
+fun demo(strs: Source<String>) {
+    val objects: Source<Any> = strs // This is OK, since T is an out-parameter
+    // ...
+}
+```
+The general rule is: when a type parameter T of a class C is declared out, it may occur only in out-position in the members of C, but in return C<Base> can safely be a supertype of C<Derived>.
+
+In "clever words" they say that the class C is covariant in the parameter T, or that T is a covariant type parameter. You can think of C as being a producer of T's, and NOT a consumer of T's.
+
+The out modifier is called a variance annotation, and since it is provided at the type parameter declaration site, we talk about declaration-site variance. This is in contrast with Java's use-site variance where wildcards in the type usages make the types covariant.
+
+In addition to out, Kotlin provides a complementary variance annotation: in. It makes a type parameter contravariant: it can only be consumed and never produced. A good example of a contravariant type is Comparable:
+
+```
+interface Comparable<in T> {
+    operator fun compareTo(other: T): Int
+}
+​
+fun demo(x: Comparable<Number>) {
+    x.compareTo(1.0) // 1.0 has type Double, which is a subtype of Number
+    // Thus, we can assign x to a variable of type Comparable<Double>
+    val y: Comparable<Double> = x // OK!
+}
+```
+
+We believe that the words in and out are self-explaining (as they were successfully used in C# for quite some time already), thus the mnemonic mentioned above is not really needed, and one can rephrase it for a higher purpose:
+
+The Existential Transformation: Consumer in, Producer out! :-)
+
+### Type projections
+Use-site variance: Type projections
+It is very convenient to declare a type parameter T as out and avoid trouble with subtyping on the use site, but some classes can't actually be restricted to only return T's! A good example of this is Array:
+
+```
+class Array<T>(val size: Int) {
+    fun get(index: Int): T { ... }
+    fun set(index: Int, value: T) { ... }
+}
+```
+This class cannot be either co- or contravariant in T. And this imposes certain inflexibilities. Consider the following function:
+```
+fun copy(from: Array<Any>, to: Array<Any>) {
+    assert(from.size == to.size)
+    for (i in from.indices)
+        to[i] = from[i]
+}
+```
+This function is supposed to copy items from one array to another. Let's try to apply it in practice:
+```
+val ints: Array<Int> = arrayOf(1, 2, 3)
+val any = Array<Any>(3) { "" } 
+copy(ints, any)
+//   ^ type is Array<Int> but Array<Any> was expected
+```
+Here we run into the same familiar problem: Array<T> is invariant in T, thus neither of Array<Int> and Array<Any> is a subtype of the other. Why? Again, because copy might be doing bad things, i.e. it might attempt to write, say, a String to from, and if we actually passed an array of Int there, a ClassCastException would have been thrown sometime later.
+
+Then, the only thing we want to ensure is that copy() does not do any bad things. We want to prohibit it from writing to from, and we can:
+```
+fun copy(from: Array<out Any>, to: Array<Any>) { ... }
+```
+What has happened here is called type projection: we said that from is not simply an array, but a restricted (projected) one: we can only call those methods that return the type parameter T, in this case it means that we can only call get(). This is our approach to use-site variance, and corresponds to Java's Array<? extends Object>, but in a slightly simpler way.
+
+You can project a type with in as well:
+```
+fun fill(dest: Array<in String>, value: String) { ... }
+Array<in String> corresponds to Java's Array<? super String>, i.e. you can pass an array of CharSequence or an array of Object to the fill() function.
+```
+
+### Star-projections
+Sometimes you want to say that you know nothing about the type argument, but still want to use it in a safe way. The safe way here is to define such a projection of the generic type, that every concrete instantiation of that generic type would be a subtype of that projection.
+
+Kotlin provides so called star-projection syntax for this:
+
+For Foo<out T : TUpper>, where T is a covariant type parameter with the upper bound TUpper, Foo<*> is equivalent to Foo<out TUpper>. It means that when the T is unknown you can safely read values of TUpper from Foo<*>.
+For Foo<in T>, where T is a contravariant type parameter, Foo<*> is equivalent to Foo<in Nothing>. It means there is nothing you can write to Foo<*> in a safe way when T is unknown.
+For Foo<T : TUpper>, where T is an invariant type parameter with the upper bound TUpper, Foo<*> is equivalent to Foo<out TUpper> for reading values and to Foo<in Nothing> for writing values.
+If a generic type has several type parameters each of them can be projected independently. For example, if the type is declared as interface Function<in T, out U> we can imagine the following star-projections:
+
+```
+Function<*, String> means Function<in Nothing, String>;
+Function<Int, *> means Function<Int, out Any?>;
+Function<*, *> means Function<in Nothing, out Any?>.
+Note: star-projections are very much like Java's raw types, but safe.
+```
+
+### Generic functions
+Not only classes can have type parameters. Functions can, too. Type parameters are placed before the name of the function:
+
+```
+fun <T> singletonList(item: T): List<T> {
+    // ...
+}
+​
+fun <T> T.basicToString(): String {  // extension function
+    // ...
+}
+```
+To call a generic function, specify the type arguments at the call site after the name of the function:
+
+```
+val l = singletonList<Int>(1)
+Type arguments can be omitted if they can be inferred from the context, so the following example works as well:
+
+val l = singletonList(1)
+```
+
+### Generic constraints
+The set of all possible types that can be substituted for a given type parameter may be restricted by generic constraints.
+
+### Upper bounds
+The most common type of constraint is an upper bound that corresponds to Java's extends keyword:
+
+```
+fun <T : Comparable<T>> sort(list: List<T>) {  ... }
+```
+The type specified after a colon is the upper bound: only a subtype of Comparable<T> may be substituted for T. For example:
+
+```
+sort(listOf(1, 2, 3)) // OK. Int is a subtype of Comparable<Int>
+sort(listOf(HashMap<Int, String>())) // Error: HashMap<Int, String> is not a subtype of Comparable<HashMap<Int, String>>
+```
+The default upper bound (if none specified) is Any?. Only one upper bound can be specified inside the angle brackets. If the same type parameter needs more than one upper bound, we need a separate where-clause:
+
+```
+fun <T> copyWhenGreater(list: List<T>, threshold: T): List<String>
+    where T : CharSequence,
+          T : Comparable<T> {
+    return list.filter { it > threshold }.map { it.toString() }
+}
+```
+The passed type must satisfy all conditions of the where clause simultaneously. In the above example, the T type must implement both CharSequence and Comparable.
+
+### Type erasure
+The type safety checks that Kotlin performs for generic declaration usages are only done at compile time. At runtime, the instances of generic types do not hold any information about their actual type arguments. The type information is said to be erased. For example, the instances of Foo<Bar> and Foo<Baz?> are erased to just Foo<*>.
+
+Therefore, there is no general way to check whether an instance of a generic type was created with certain type arguments at runtime, and the compiler prohibits such is-checks.
+
+Type casts to generic types with concrete type arguments, e.g. foo as List<String>, cannot be checked at runtime.
+These unchecked casts can be used when type safety is implied by the high-level program logic but cannot be inferred directly by the compiler. The compiler issues a warning on unchecked casts, and at runtime, only the non-generic part is checked (equivalent to foo as List<*>).
+
+The type arguments of generic function calls are also only checked at compile time. Inside the function bodies, the type parameters cannot be used for type checks, and type casts to type parameters (foo as T) are unchecked. However, reified type parameters of inline functions are substituted by the actual type arguments in the inlined function body at the call sites and thus can be used for type checks and casts, with the same restrictions for instances of generic types as described above.
