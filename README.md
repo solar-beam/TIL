@@ -1,11 +1,11 @@
 ## TIL
-> °ÔÀ¸¸§ÀÇ ¿ª»ç
-- `daily` : ÄÚµù/°³³ä°øºÎ
-- `docs` : ¹®¼­Á¤¸®/¹ø¿ª
-- `dogfood` : »çÀÌµåÇÁ·ÎÁ§Æ®
+> ê²Œìœ¼ë¦„ì˜ ì—­ì‚¬
+- `daily` : ì½”ë”©/ê°œë…ê³µë¶€
+- `docs` : ë¬¸ì„œì •ë¦¬/ë²ˆì—­
+- `dogfood` : ì‚¬ì´ë“œí”„ë¡œì íŠ¸
 
 ## On-going
-- 100ÀÏÄÚµù
+- 100ì¼ì½”ë”©
 - c++ STL & algorithm
 - kotlin basic
 
@@ -15,5 +15,5 @@
 - Linux from scratch
 
 ## Done
-- java/android side project(2016.12.) [¸µÅ©1](https://drive.google.com/file/d/0B4PIF3liDx0nSlg4TjNDNjBvcEU/view?usp=sharing), [¸µÅ©2](https://drive.google.com/drive/folders/0B4PIF3liDx0ndnZNSlh6TFlRb3c?usp=sharing), [¸µÅ©3](https://drive.google.com/drive/folders/1f7WqUpmxUrfGF6aw0Q0NoBLoXlIxcEQZ?usp=sharing)
-- java STL & algorithm(2016.12.) [¸µÅ©](https://github.com/solar-beam/AlgorithmStudy)
+- java/android side project(2016.12.) [ë§í¬1](https://drive.google.com/file/d/0B4PIF3liDx0nSlg4TjNDNjBvcEU/view?usp=sharing), [ë§í¬2](https://drive.google.com/drive/folders/0B4PIF3liDx0ndnZNSlh6TFlRb3c?usp=sharing), [ë§í¬3](https://drive.google.com/drive/folders/1f7WqUpmxUrfGF6aw0Q0NoBLoXlIxcEQZ?usp=sharing)
+- java STL & algorithm(2016.12.) [ë§í¬](https://github.com/solar-beam/AlgorithmStudy)
