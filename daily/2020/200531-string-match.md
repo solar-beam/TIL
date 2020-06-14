@@ -95,12 +95,13 @@ for s = 0 to n-m
 - 라빈-카프 알고리즘의 아이디어는 검색어와 대상텍스트를 각각 [해시](http://wiki.hash.kr/index.php/%ED%95%B4%EC%8B%9C)값을 구해 비교하여 일치하면 비교연산을 수행하고, 그렇지 않으면 생략한다는 것이다.
 - Rabin Fingerprint라는 해시함수를(H[i]) 주로 사용하는데, 문자 아스키코드 값 등에 x^n을 곱해서 더한다. 이를테면 "abcd"의 해시값은 97*8 + 98*4 + 99*2 + 100*1이다. 
 
-![](../img/rabinKarp2.jpg)  
+![](../img/rabinkarp2.jpg)  
 
 - H[i]를 알면 H[i+1]을 알 수 있으므로, 이전 연산결과를 참조해가면서 반복되는 연산을 생략할 수 있다.  
+
 ![](../img/rabinKarp.png)  
 
-![](../img/rabinKarp3.jpg)  
+![](../img/rabinkarp3.jpg)  
 
 - 라빈카프 알고리즘의 해싱함수로 라빈 fingerprint함수를 사용하는 주된 이유는, 해당 알고리즘을 소개할 때 저자가 자신이 개발한 알고리즘으로 내부를 구현했기 때문이다. 더불어 fingerprint함수는 롤링해시로서, 이전에 구한 해시값을 이용해 다음 해시값을 구할 수 있어 효율적이기도 하다. 세부내용은 다음문서를 참조 [karp-rabin-lecture-note.md](../docs/karp-rabin-lecture-note.md)
 
