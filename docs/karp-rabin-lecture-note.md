@@ -3,8 +3,10 @@
 > [wiki : Rabin-Karp algorithm](https://en.wikipedia.org/wiki/Rabin%E2%80%93Karp_algorithm)  
 > [wiki : Rabin fingerprint](https://en.wikipedia.org/wiki/Rabin_fingerprint)  
 
-![](../img/999EE4435D18E8B428.png)  
-![](../img/99AEA8435D18E8B327.png)  
+![](../daily/img/99AEA8435D18E8B327.png)
+![](../daily/img/999EE4435D18E8B428.png)
+![](../daily/img/99AFF5435D18E8BB27.png)
+![](../daily/img/9964B5435D18E8BC35.png)
 
 ## Karp-Rabin(aka "Fingerprint" Method)
 여기서 소개할 아이디어는 문자열 S에 대하여 다음 특성을 가지는 특별한 롤링해시 h(S) 구현하는 것이다.
