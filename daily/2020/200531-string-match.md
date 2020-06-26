@@ -103,7 +103,7 @@ for s = 0 to n-m
 
 ![](../img/rabinkarp3.jpg)  
 
-- 라빈카프 알고리즘의 해싱함수로 라빈 fingerprint함수를 사용하는 주된 이유는, 해당 알고리즘을 소개할 때 저자가 자신이 개발한 알고리즘으로 내부를 구현했기 때문이다. 더불어 fingerprint함수는 롤링해시로서, 이전에 구한 해시값을 이용해 다음 해시값을 구할 수 있어 효율적이기도 하다. 세부내용은 다음문서를 참조 [karp-rabin-lecture-note.md](../docs/karp-rabin-lecture-note.md)
+- 라빈카프 알고리즘의 해싱함수로 라빈 fingerprint함수를 사용하는 주된 이유는, 해당 알고리즘을 소개할 때 저자가 자신이 개발한 알고리즘으로 내부를 구현했기 때문이다. 더불어 fingerprint함수는 롤링해시로서, 이전에 구한 해시값을 이용해 다음 해시값을 구할 수 있어 효율적이기도 하다. 세부내용은 다음문서를 참조 [karp-rabin-lecture-note.md](../../docs/karp-rabin-lecture-note.md)
 
 ## 오토마타
 - [오토마타란](http://blog.skby.net/%EC%9C%A0%ED%95%9C-%EC%98%A4%ED%86%A0%EB%A7%88%ED%83%80-fa-finite-automata/), 컴퓨터 프로그램과 전자회로 설계시 사용하는 이산적 입력과 출력을 가지는 시스템 모형
