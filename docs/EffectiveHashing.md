@@ -8,6 +8,7 @@
 6. [wiki : 분할상환분석](https://ko.wikipedia.org/wiki/%EB%B6%84%ED%95%A0%EC%83%81%ED%99%98%EB%B6%84%EC%84%9D)
 7. [cyranocoding : 해시 해싱 해시테이블 자료구죠의 이해](https://velog.io/@cyranocoding/Hash-Hashing-Hash-Table%ED%95%B4%EC%8B%9C-%ED%95%B4%EC%8B%B1-%ED%95%B4%EC%8B%9C%ED%85%8C%EC%9D%B4%EB%B8%94-%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%EC%9D%98-%EC%9D%B4%ED%95%B4-6ijyonph6o)
 8. [ratsgo : 해싱, 해시함수, 해시테이블](https://ratsgo.github.io/data%20structure&algorithm/2017/10/25/hash/)
+9. [igniter : LinkedHashMap 순서를 유지하는 해시맵](https://medium.com/@igniter.yoo/java-linkedhashmap-%EC%88%9C%EC%84%9C%EB%A5%BC-%EC%9C%A0%EC%A7%80%ED%95%98%EB%8A%94-%ED%95%B4%EC%8B%9C%EB%A7%B5-11a7846d8893)
 
 ## 다항식을 이용한 문자열 Hashing
 - Rabin Fingerprint로 만들거다. 계수는 31, 밑은 2, 모듈러는 그때그때 적절히 큰 소수로. 곱셈연산 횟수를 줄이기 위해 호너 법칙을 이용한다.
@@ -27,9 +28,9 @@
 
 - 지수연산으로 발생하는 오버플로우 오류를 막을 방법은? 나머지연산을 이용한다. 이때 mod값은 큰 소수를 구해 사용하는 것이 효과적이다.
 > 오픈튜토리얼스 : 나머지의 법칙
-> (a+m)%m = a%m
-> ((a%m) + (b%m))%m = (a+b)%mod
-> ((a%m) * (b%m))%m = (a*b)%m
+> (a+m)%m = a%m  
+> ((a%m) + (b%m))%m = (a+b)%mod  
+> ((a%m) * (b%m))%m = (a*b)%m  
 ![](../modulo.jpg)
 
 - 패턴 문자열 길이만큼 해시를 계산하면 단순비교와 다르지 않다. 계산량을 줄일 방법은 없을까? 가장 앞에 계산했던 값을 빼고, 마지막 계산값을 더한다. 구르듯 움직이는 롤링해시.
@@ -38,7 +39,7 @@
   - n차 다항식에서 단순 계산으로 답을 구하면 덧셈은 n번, 곱셈은 n(n+1)/2번 해야 한다.
   - k차항에서 구한 값을 k+1차항에서도 활용한다면, 곱셈을 2n번으로 줄일 수 있다.
   - 호너의 법칙은 k+1차항에서 k차항 이하를 아래와 같이 괄호로 묶어 계산하는 방식으로, 곱셈을 n번까지 울일 수 있다.
-  ![](../img/horner1.png)
+  ![](../img/horner1.png)  
   ![](../img/horner2.png)
 ```java
 //written by jackpot53, https://jackpot53.tistory.com/119
