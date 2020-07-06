@@ -1,4 +1,5 @@
---day1
+# meetup-git-plus
+
 ## diff의 내부구현
 - 최장부분수열찾기 알고리즘을 이용한다(메모이제이션)
 - ??[diff알고리즘](http://www.cis.upenn.edu/~bcpierce/papers/diff3-short.pdf)
@@ -34,7 +35,6 @@
 - 기능 : diff의 base를 다시 잡아준다.
 - 이미 remote/origin에 반영된 커밋을 rebase하면 역적이다.
 
---day2
 ## git diff chunk tuning
 가능한가??
 
