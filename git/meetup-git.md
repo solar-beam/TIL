@@ -1,4 +1,4 @@
-﻿# meetup-git
+﻿# [meetup-git](https://www.lesstif.com/gitbook/git-home-27984628.html)
 - 다음시간에는 web-socket과 test-driven-development를 스터디
 - diff / 호프만알고리즘
 - 주요 명령어
