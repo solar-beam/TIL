@@ -8,3 +8,4 @@
 ## gh-pages from scratch
 - [깃허브 페이지에 SPA배포하기](https://github.com/sujinleeme/spa-github-pages-ko)
 - [SPA와 SPA라우팅의 원리](https://github.com/voyagerwoo/simple-spa)
+- root 디렉토리에 `.nojekyll`파일을 추가하자
