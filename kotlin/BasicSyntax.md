@@ -44,17 +44,20 @@ fun printSum(a : Int, b : Int): Unit{
 ```
 `Unit` 리턴타입은 생략 가능하다
 ```
-fun printSum(a : Int, b : Int): Unit{
+fun printSum(a : Int, b : Int) {
 	println("sum of $a and $b is ${a+b})
 }
 ```
 
+함수인자는 묵시적으로 const, final
+
 ### Variables
+
 `val`키워드로 읽을 수만 있는 지역변수를 정의할 수 있다. 할당은 한번만 할 수 있다.
 ```
 val a: Int = 1
 val b = 2 //타입추론
-val c: Int  //변수할당을 바로 안하고 나중에 해도된다
+val c: Int  //변수할당을 바로 안하고 나중에 해도된다(컴파일러 설정에 따라 다르다)
 c = 3
 ```
 `var`키워드는 변경할 수 있다.
@@ -91,7 +94,10 @@ a = 2
 val s2 = "${s1.replace("is", "was")}, but now is $a"
 ```
 
+`${}`내부에는 표현식만 들어갈 수 있는데, 할당은 안되지만 함수호출은 가능하다
+
 ### Conditional expressions
+
 ```
 fun maxOf(a: Int, b: Int): Int{
 	if(a>b) return a
@@ -106,12 +112,13 @@ fun maxOf(a: Int, b: Int) = if(a>b) a else b
 ### Nullable values and null checks
 null이 될 수 있는 변수는 반드시 nullable로 표시해준다.  
 `str`을 파싱할때 정수값이 없다면 null을 반환한다. 그래서 리턴값에 nullable표시를 해준다.
+
 ```
 fun parseInt(str: String): Int?{
 	//...
 }
 ```
-nullable변수를 반환하는 함수
+null check한 다음에는 non-nullable로 캐스팅한다
 ```
 fun printProduct(arg1: String, arg2: String){
 	val x = parseInt(arg1)
@@ -296,7 +303,8 @@ data class Customer(val name: String, val email:String)
   - `toString()`
   - `copy()`
   - `component1()`, `component2()`, ...
-> NOTE: DAO는 DataAccessObject로서, 실제로 DB에 접근하는 객체이다. DTO는 DataTransferObject로서 계층간 데이터교환을 위한 객체다. EntityClass는 실제 DB 테이블과 매칭할 클래스이다.  
+> NOTE: DAO는 DataAccessObject로서, 실제로 DB에 접근하는 객체이다. DTO는 DataTransferObject로서 계층간 데이터교환을 위한 객체다. EntityClass는 실제 DB 테이블과 매칭할 클래스이다.
+
 > NOTE: POJO는 PlainOldJavaObject, POCO는 PlainOldCLRObject. 프레임워크에 종속되지 않은 순수 자바객체를 가리킨다. 사실 큰 의미없다. 그런데 getter/setter를 제외한 메소드를 가지지 않고, 값으로만 정의되는 객체를 말하기도 한다.
 
 ### Default values for function parameters
@@ -355,7 +363,7 @@ val list: List<Int> = List(5, {i->i})
 val list = listOf("a", "b", "c")
 ```
 변경가능한 리스트는 MutableList또는 ArrayList클래스를 이용한다. 생성자를 이용할 수도 있고, mutableListOf()같이 함수로 초기화할 수도 있다.  
-  
+
 요약하면  
 
 | 콜렉션 | Immutable | Mutable |
@@ -377,8 +385,10 @@ println(map["key"])
 map["key"] = value
 ```
 
-###Lazy property
+### Lazy property
+
 `val`은 선언과 동시에 값을 가져야하는데, 아래와 같이 객체가 고유 수명주기를 가지는 경우 초기화 시점을 특정할 수 없는 문제가 생긴다.
+
 ```
 class MainActivity : AppCompatActivity() {
     private val mWelcomeTextView: TextView
@@ -414,7 +424,7 @@ class MainActivity : AppCompatActivity() {
 ```
 fun String.spaceToCamelCase(): Unit = { ... }
 //반환값이 없으면 등호는 생략할 수 있다
-​
+
 "Convert this to camelcase".spaceToCamelCase()
 ```
 
@@ -471,7 +481,7 @@ val value = ...
 val mapped = value?.let { transformValue(it) } ?: defaultValue 
 // defaultValue is returned if the value or the transform result is null.
 ```
-위에서 언급했듯 let은 호출하는 객체를 블록의 인자로 넘긴다. 여기서는 value가 람다식 인자로 넘겨졌다. 그런데 인자가 하나이므로 이름을 생략하고 it으로 표시했다. ?:는 let에 걸린다.
+위에서 언급했듯 let은 호출하는 객체를 블록의 인자로 넘긴다. 여기서는 value가 람다식 인자로 넘겨졌다. 그런데 인자가 하나이므로 이름을 생략하고 it으로 표시했다.
 
 ### Return on when expression
 표현식을 반환할 수 있다(결과값이 있으니까)
@@ -520,6 +530,7 @@ fun arrayOfMinusOnes(size: Int): IntArray {
 }
 ```
 `apply()`는 호출한 객체를 블록의 *리시버*로 전달하고 객체 자체를 반환한다. 리시버란 블록 내 메서드 및 속성에 바로 접근할 수 있도록 할 객체이다. 아래와 같이 객체 초기화할 때 쓸 수 있다. 객체생성과 연속된 작업필요시.
+
 ```
 val param = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
     gravity = Gravity.CENTER_HORIZONTAL
@@ -531,6 +542,12 @@ val param = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
 > NOTE: run은 호출한 객체를 블록의 리시버로 전달하고 블록의 결과값을 반환한다. 이미 생성된 객체에 대하여 연속된 작업이 필요할 때 사용한다.  
 
 > NOTE: with은 인자로 받는 객체를 블록의 리시버로 전달하며 블록의 결과값을 반환한다. run은 객체.run이고 with은 with(객체)이다. 리시버로 전달할 객체 위치가 다르다.
+
+| 구분 |         let          |           apply           | run(anonymous)  |        run(object)        |            with             |
+| :--: | :------------------: | :-----------------------: | :-------------: | :-----------------------: | :-------------------------: |
+|  IN  | 호출한 객체를 인자로 |  호출한 객체를 리시버로   |    객체 없이    |  호출한 객체를 리시버로   | 인자로 받은 객체를 리시버로 |
+| OUT  |    블록의 결과값     |         객체 자체         | Unit또는 결과값 |       블록의 결과값       |        블록의 결과값        |
+| WHEN |                      | 새로운 객체로 연속된 작업 |                 | 생성된 객체로 연속된 작업 |       safe call미지원       |
 
 ### Single-expression function
 ```
@@ -601,8 +618,6 @@ stream.buffered().reader().use { reader ->
 
 inline fun <reified T: Any> Gson.fromJson(json: JsonElement): T = this.fromJson(json, T::class.java)
 ```
-> ?#굳이
-
 ### Consuming a nullable Boolean
 ```
 val b: Boolean? = ...
@@ -612,16 +627,12 @@ if (b == true) {
     // `b` is false or null
 }
 ```
-> ?#굳이
-
 ### Swapping two variables
 ```
 var a = 1
 var b = 2
 a = b.also { b = a }
 ```
-ㅋㅋㅋㅋㅋ어지간히 
-
 ### TODO(): Marking code as incomplete
 ```
 fun calcTaxes(): BigDecimal = TODO("Waiting for feedback from accounting")
@@ -667,7 +678,8 @@ data
 - 범위지정시 1..9보다 1 until 10을 써라
 - 라이브러리 작성할 때 API안전성을 보장하기 위해 멤버가시성을 명시적으로 지정하고, 함수의 반환타입/속성타입을 명시적으로 지정하고, 모든 public멤버에 대한 주석을 제공하여 문서생성을 지원한다.  
 
->NOTE: 두고보자!!
+## 더 공부가 필요한 주제
+
 - #? typealias
 - #? lamda : pram, return
 - #? Nullable Boolean
