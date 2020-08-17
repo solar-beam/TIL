@@ -65,7 +65,7 @@
 
 - **ARRAY** : C++표준에서 배열의 크기는 컴파일 타임에 정해지므로, 배열의 크기는 일반 변수로 정해질 수 없다. 대신 `vector` 컨테이너를 사용하자. L항에 선언만 해도 객체가 생성된다(`Lvalue = new Rvalue` 불필요.)
 
-  - 함수인자에 포인터로 배열 넘기기
+  - 함수인자에 포인터로 이차원배열 넘기기
 
     ```
     // Note: You need to specify the array size in the function declaration 
@@ -79,7 +79,7 @@
     //출처: https://boycoding.tistory.com/217 [소년코딩]
     ```
 
-  - 함수인자에 레퍼런스 배열로 배열 넘기기
+  - 함수인자에 레퍼런스로 이차원 배열 넘기기
 
     ```
     // Note: You need to specify the array size in the function declaration 
