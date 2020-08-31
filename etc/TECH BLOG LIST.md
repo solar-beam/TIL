@@ -6,6 +6,7 @@
 - [조대협, 조대협의 블로그](https://bcho.tistory.com/) : 기술이슈 및 자료모음(채팅앱 구현방식 Polling/Long Polling/Streaming 검색 중 찾음)
 - [John Grib, 기억보조용 위키](https://johngrib.github.io/) : 기술이슈 및 자료모음(REST 논문 본문 검색 중 찾음)
 - [SeemsPyo, Slacking studio BLOG](https://blog.eunsatio.io/) : 웹 프론트 기술이슈 및 자료모음
+- [zerocho](https://www.zerocho.com/)
 
 ## PAPER
 
