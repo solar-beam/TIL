@@ -5,6 +5,9 @@
 ## DOING
 
 - 알고리즘 100문제 풀기
+- programming language
+  - c++ grammer
+  - android app in java/kotlin
 
 ## TODO
 
@@ -18,6 +21,10 @@
 - linux-from-scratch 설치하고 번역
 - 통계/수학공부
   - KOCW로 통계학 강의 청강하기
+    - 통계학개론과 R프로그래밍
+    - 수리통계학
+    - 회귀분석
+    - AI 통계적 학습론
   - 개발자를 위한 선형대수 일독하기
 - CS 복습하기
   - 운영체제
