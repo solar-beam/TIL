@@ -111,7 +111,7 @@ public class Polynomial {
 
 ### RANDOM/BIBLETEXT TEST
 
-![](C:\Users\pty11\Documents\dev\TIL\img\hashtest.PNG)
+![](../img/hashtest.PNG)
 
 ```c++
 #include <iostream>
