@@ -93,149 +93,8 @@ public class Polynomial {
 ### Seperate Chaining
 ![](../img/16eBeaqTti8MxWPsw4xBgw.png)
 - 해시 충돌이 자주 발생하면 검색 효율이 낮아진다(쏠림)
-
 - 외부 저장 공간을 사용해야하며, 이를 위한 추가 작업이 필요하다
-
 - 시간복잡도 : 테이블 저장소 길이를 n 키의 수를 m이라고 했을 때 평균 1개 hash당 m/n개의 키가 들어있을 것이다. 이를 'a'라고 하자. 평균 a, 최악의 경우 n(한 해시에 모든 키가 몰려있을 때)의 시간복잡도를 가진다.
-
-- 아래와 같이 구현했을 경우 0.3 확률로 충돌 발생한다.
-
-  ```c++
-  #include <iostream>
-  #include <string>
-  #include <time.h>
-  #define HASHTABLE_SIZE 1000
-  #define KEY_MAX_LENGTH 10
-  
-  using namespace std;
-  
-  struct Node {
-  	char key[KEY_MAX_LENGTH];
-  	int value;
-  	Node* next = NULL;
-  };
-  
-  class SolarHashTable {
-  private:
-  	Node* tb[HASHTABLE_SIZE];
-  
-  public:
-  	int err = 0;
-  	int collision = 0;
-  
-  public:
-  	void _init() {
-  		for (int i = 0; i < HASHTABLE_SIZE; i++) tb[i] = NULL;
-  		err = 0;
-  		collision = 0;
-  	}
-  
-  	int _test() {
-  		srand(time(NULL));
-  		for (int i = 0; i < HASHTABLE_SIZE; i++) {
-  			char randKey[KEY_MAX_LENGTH];
-  			for (int k = 0; k < KEY_MAX_LENGTH - 1; k++) {
-  				randKey[k] = rand()%26 + 97; //ASCII
-  			}
-  			randKey[KEY_MAX_LENGTH - 1] = '\0';
-  			int randValue = rand()%100 + 1;
-  			addNode(randKey, randValue);
-  		}
-  		return 0;
-  	}
-  
-  	bool keyCmp(char(&o1)[KEY_MAX_LENGTH], char(&o2)[KEY_MAX_LENGTH]) {
-  		int i = 0;
-  		while (o1[i] != '\0' && o2[i] != '\0') {
-  			if (o1[i] != o2[i]) return false;
-  			i++;
-  		}
-  		if (i < sizeof(o1) / sizeof(int) || i < sizeof(o2) / sizeof(int)) return false;
-  		return true;
-  	}
-  
-  	void keyCpy(char(&dist)[KEY_MAX_LENGTH], char(&src)[KEY_MAX_LENGTH], int length) {
-  		int i = 0;
-  		while (src[i] != '\0' && i < length) {
-  			dist[i] = src[i];
-  			i++;
-  		}
-  		dist[i] = '\0';
-  	}
-  
-  	int addNode(char(&key)[KEY_MAX_LENGTH], int value) {
-  		int pos = getHash(key);
-  		Node* cur;
-  		if (tb[pos] != NULL) {
-  			if (keyCmp(tb[pos]->key, key)) {
-  				err++;
-  				cout << "ERR_SAME_KEYVALUE : ";
-  				for (int i = 0; key[i] != '\0'; i++) cout << key[i] << " ";
-  				cout << endl;
-  				return -1;
-  			}
-  			else {
-  				collision++;
-  				cout << "HASH_COLLISION : ";
-  				for (int i = 0; key[i] != '\0'; i++) cout << key[i] << " ";
-  				cout << endl;
-  				cur = tb[pos];
-  				while (cur->next != NULL) {
-  					if (keyCmp(key, cur->key)) break;
-  					else cur = cur->next;
-  				}
-  				cur->next = new Node;
-  				keyCpy(cur->next->key, key, KEY_MAX_LENGTH - 1);
-  				cur->value = value;
-  				return 1;
-  			}
-  		}
-  		tb[pos] = new Node;
-  		keyCpy(tb[pos]->key, key, KEY_MAX_LENGTH - 1);
-  		tb[pos]->value = value;
-  		return 0;
-  	}
-  
-  	int delNode(char(&key)[KEY_MAX_LENGTH]) {
-  		//TODO
-  	}
-  
-  	int editNode(char (&key)[KEY_MAX_LENGTH], int value) {
-  		Node* n = getNode(key);
-  		n->value = value;
-  	}
-  
-  	Node* getNode(char (&key)[KEY_MAX_LENGTH]) {
-  		int pos = getHash(key);
-  		Node* cur = tb[pos];
-  		while (cur->next != NULL) {
-  			if (keyCmp(key, cur->key)) break;
-  			else cur = cur->next;
-  		}
-  		return cur;
-  	}
-  
-  	int getHash(char key[]);
-  };
-  
-  int SolarHashTable::getHash(char key[]) {
-  	int hash = 0;
-  	for (int i = 0; key[i] != '\0'; i++) {
-  		hash = (hash * 31 + key[i]) % HASHTABLE_SIZE;
-  	}
-  	return hash;
-  }
-  
-  SolarHashTable st;
-  int main() {
-  	st._init();
-  	st._test();
-  
-  	cout << endl;
-  	cout << "[COLLISION : " << st.collision << "]";
-  	return 0;
-  }
-  ```
 
   
 
@@ -247,4 +106,218 @@ public class Polynomial {
   - 이중해시 : 다른 해시함수를 한번 더 적용
 - 삽입, 삭제, 검색 모두 대상이 되는 Hash를 찾아가는 과정에 따라 시간복잡도가 계산이 된다. 해시함수를 통해 얻은 Hash가 비어있지 않으면 다음 버킷을 찾아가야 한다. 이 찾아가는 횟수가 많아지면 많아질 수록 시간복잡도가 증가한다. 최상의 경우 O(1) ~ 최악의 경우 (O(n)). 따라서 Open Addressing에서는 비어있는 공간을 확보하는 것(= 저장소가 어느 정도 채워졌을 때 저장소의 사이즈를 늘려주는 것)이 필요하다. 최악의 경우 저장소를 모두 살펴보아야 하는 경우가 생길 수 있다.(O(n))
 
-  
+
+
+
+### RANDOM/BIBLETEXT TEST
+
+![](C:\Users\pty11\Documents\dev\TIL\img\hashtest.PNG)
+
+```c++
+#include <iostream>
+#include <fstream>
+#include <time.h>
+#define HASHTABLE_SIZE 100000
+#define KEY_MAX_LENGTH 100
+#define LINE_MAX_LENGTH 1000
+
+using namespace std;
+
+struct Node {
+	char key[KEY_MAX_LENGTH];
+	int value;
+	Node* next = NULL;
+};
+
+class SolarHashTable {
+private:
+	Node* tb[HASHTABLE_SIZE];
+
+public:
+	int err = 0;
+	int collision = 0;
+	int nodeNum = 0;
+
+public:
+	void _init() {
+		for (int i = 0; i < HASHTABLE_SIZE; i++) tb[i] = NULL;
+		err = 0;
+		collision = 0;
+	}
+
+	int _randTextTest() {
+		srand(time(NULL));
+		for (int i = 0; i < HASHTABLE_SIZE; i++) {
+			char randKey[KEY_MAX_LENGTH];
+			for (int k = 0; k < KEY_MAX_LENGTH - 1; k++) {
+				randKey[k] = rand()%26 + 97; //ASCII
+			}
+			randKey[KEY_MAX_LENGTH - 1] = '\0';
+			int randValue = rand()%100 + 1;
+			addNode(randKey, randValue);
+		}
+		return 0;
+	}
+
+	int _fileTextTest() {
+		ifstream fileReader;
+		fileReader.open("bible.txt");
+		if (fileReader.is_open()) {
+			while (!fileReader.eof()) {
+				if (nodeNum > HASHTABLE_SIZE) break;
+				//istream style
+				char buffer[LINE_MAX_LENGTH];
+				fileReader.getline(buffer, LINE_MAX_LENGTH);
+				//cout << "cursor : " << buffer << endl;
+				
+				//std style
+				//string buffer;
+				//getline(fileReader, buffer);
+				int front = 0, rear = 0;
+				while (buffer[rear] != '\0') {
+					if (buffer[rear] == ' ') {
+						char token[KEY_MAX_LENGTH];
+						int i = 0;
+						while (front < rear) {
+							token[i] = buffer[front];
+							i++, front++;
+						}
+						token[i] = '\0';
+						int v = 0;
+						addNode(token, v);
+						rear++;
+						front = rear;
+					}
+					else {
+						rear++;
+					}
+				}
+
+			}
+		}
+		return 0;
+	}
+
+	bool keyCmp(char(&o1)[KEY_MAX_LENGTH], char(&o2)[KEY_MAX_LENGTH]) {
+		int i = 0;
+		while (o1[i] != '\0' && o2[i] != '\0') {
+			if (o1[i] != o2[i]) return false;
+			i++;
+		}
+		if (i < sizeof(o1) / sizeof(int) || i < sizeof(o2) / sizeof(int)) return false;
+		return true;
+	}
+
+	void keyCpy(char(&dist)[KEY_MAX_LENGTH], char(&src)[KEY_MAX_LENGTH], int length) {
+		int i = 0;
+		while (src[i] != '\0' && i < length) {
+			dist[i] = src[i];
+			i++;
+		}
+		dist[i] = '\0';
+	}
+
+	int addNode(char(&key)[KEY_MAX_LENGTH], int value) {
+		nodeNum++;
+		int pos = getHash(key);
+		Node* cur;
+		//cout << "#HASHCODE : " << pos << endl;
+
+		if (tb[pos] != NULL) {
+			if (keyCmp(tb[pos]->key, key)) {
+				err++;
+				//cout << "ERR(SAME KEYVALUE) : ";
+				//for (int i = 0; key[i] != '\0'; i++) cout << key[i] << " ";
+				//cout << endl;
+				return -1;
+			}
+			else {
+				collision++;
+				//cout << "HASH COLLISION : ";
+				//for (int i = 0; key[i] != '\0'; i++) cout << key[i] << " ";
+				//cout << endl;
+				cur = tb[pos];
+				while (cur->next != NULL) {
+					if (keyCmp(key, cur->key)) break;
+					else cur = cur->next;
+				}
+				cur->next = new Node;
+				keyCpy(cur->next->key, key, KEY_MAX_LENGTH - 1);
+				cur->value = value;
+				return 1;
+			}
+		}
+		tb[pos] = new Node;
+		keyCpy(tb[pos]->key, key, KEY_MAX_LENGTH - 1);
+		tb[pos]->value = value;
+		return 0;
+	}
+
+	int delNode(char(&key)[KEY_MAX_LENGTH]) {
+		//TODO
+	}
+
+	int editNode(char (&key)[KEY_MAX_LENGTH], int value) {
+		Node* n = getNode(key);
+		n->value = value;
+	}
+
+	Node* getNode(char (&key)[KEY_MAX_LENGTH]) {
+		int pos = getHash(key);
+		Node* cur = tb[pos];
+		while (cur->next != NULL) {
+			if (keyCmp(key, cur->key)) break;
+			else cur = cur->next;
+		}
+		return cur;
+	}
+	
+	int getHash(char key[]);
+};
+
+int SolarHashTable::getHash(char key[]) {
+	int hash = 0;
+	int poly = 0xEDB88320;
+	for (int i = 0; key[i] != '\0'; i++) {
+		hash = (hash * 31 + key[i]); //rabin-carp
+		//hash = (65599 * hash + key[i]); //x65599
+		//poly = (poly << 1) | (poly >> (32 - 1)); hash = (int)(poly * hash + key[i]); //0xEDB88320 + 1bit Shift
+	}
+	hash %= HASHTABLE_SIZE;
+	if (hash < 0) hash *= -1;
+	return hash;
+}
+
+SolarHashTable st;
+int main() {
+	time_t start, end;
+	double result;
+
+	start = time(NULL);
+	st._init();
+	st._randTextTest();
+	cout << "RANDON TEXT TEST" << endl;
+	cout << "[NODE      : " << st.nodeNum << "]" << endl;
+	cout << "[COLLISION : " << st.collision << "]" << endl;
+	cout << "[ERROR     : " << st.err << "]" << endl;
+	end = time(NULL);
+	result = (double)(end - start);
+	cout << "※ " << result << "ms" << endl;
+	
+	start = time(NULL);
+	st._init();
+	st._fileTextTest();
+	cout << "FILE TEXT(BIBLE) TEST" << endl;
+	cout << "[NODE      : " << st.nodeNum << "]" << endl;
+	cout << "[COLLISION : " << st.collision << "]" << endl;
+	cout << "[ERROR     : " << st.err << "]" << endl;
+	end = time(NULL);
+	result = (double)(end - start);
+	cout << "※ " << result << "ms" << endl;
+
+	return 0;
+}
+```
+
+
+
