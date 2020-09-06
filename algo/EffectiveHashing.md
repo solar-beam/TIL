@@ -93,9 +93,14 @@ public class Polynomial {
   - '좋은' 가상난수의 조건은 1) 균등분포 2) 빠르게생성 3) 서로다른 난수를 많이 4) 생성된 난수를 순서대로 똑같이 재생성.. 으로 해시 알고리즘과 동일하다. '좋은' 가상난수 알고리즘이 있다면, 해싱 알고리즘의 구현에도 이용할 수 있을 것이다. [(mip : 난수)](http://mip.hnu.kr/courses/simulation/chap2/chap2.html)
   - 또한 난수 생성의 통계적 검정과정을 이용할 수도 있다. [(mip : 난수의 통계적 검정)](http://mip.hnu.kr/courses/simulation/chap2/chap2_2.html)
 
+
+
+
+## SHA-3
+
+- KISA에서 배포 중인 SHA-3 해시함수 알고리즘 소스코드
+
   
-
-
 
 ## Hash Table
 
@@ -293,10 +298,11 @@ public:
 		int pos = getHash(key);
 		Node* cur = tb[pos];
 		while (cur->next != NULL) {
-			if (keyCmp(key, cur->key)) break;
+			if (keyCmp(key, cur->key)) return cur;
 			else cur = cur->next;
 		}
-		return cur;
+		cout << "CANNOT FIND NODE WITH KEY(" << key << ")" << endl;
+		return NULL;
 	}
 	
 	int getHash(char key[]);
