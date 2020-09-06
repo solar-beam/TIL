@@ -11,8 +11,42 @@
 - `getline`
   - `istream:getline()` : 마지막에 `'/0'`이 붙는 `char*` 방식 C언어 문자열 방식
   - `string:getline()` : `std::string` 방식
+  
 - `setprecision` 
+
 - `cin`, `cout` : 입출력 객체의 <<, >> 연산자는 여러 가지 기본 타입에 대해 오버로딩되어 있다.
+
+- `fstream`
+
+  - `ifstream`
+
+    ```c++
+    ifstream readFile;
+    readFile.open("test.txt");
+    if(readFile.is_open()){
+    	while(!readFile.eof()){
+    		string str;
+    		getline(readFile, str);
+    	}
+    	readFile.close();
+    }
+    ```
+
+  - `ofstream`
+
+    ```c++
+    ofstream writeFile;
+    writeFile.open("test.txt");
+    //char[]
+    char arr[20] = "Hello, world!"";
+    writeFile.write(arr, 20);
+    //string
+    string str = "Hello, world!";
+    writeFile.write(str.c_str(), str.size());
+    writeFile.close();
+    ```
+
+    
 
 ### C++11
 
@@ -56,6 +90,7 @@
 ### String Usage
 
 - `char arry_name[max_size] = "STRING"` : char 배열에 문자열을 저장할 수 있다. 마지막에는 `\0`이 온다. 공백문자는 `\t`, `\n`, `\r`과 같이 이스케이핑한다. 한글은 1byte로 배열에서 2칸을 차지한다. 영문과 달리 글자별 조회할 수는 없다.
+- https://jhnyang.tistory.com/115
 - https://modoocode.com/292
 
 
