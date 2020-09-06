@@ -124,10 +124,6 @@ public class Polynomial {
 
 ### RANDOM/BIBLETEXT TEST
 
-- node < 10000
-
-![](../img/hashtest.PNG)
-
 - full text (장:절 없이)
 
 ![](../img/hashtest(full).PNG)
@@ -136,7 +132,7 @@ public class Polynomial {
 #include <iostream>
 #include <fstream>
 #include <time.h>
-#define HASHTABLE_SIZE 100000
+#define HASHTABLE_SIZE 100000//https://www.di-mgt.com.au/primes1000.html
 #define KEY_MAX_LENGTH 100
 #define LINE_MAX_LENGTH 1000
 #define VALUE_MAX_SIZE 1000
@@ -253,35 +249,28 @@ public:
 
 		if (tb[pos] != NULL) {
 			Node* cur = tb[pos];
-			while (cur->next != NULL) {
+			while (cur) {
 				if (keyCmp(key, cur->key)) {
 					err++;
-					//cout << "ERR(SAME KEYVALUE) : ";
-					//for (int i = 0; key[i] != '\0'; i++) cout << key[i] << " ";
-					//cout << endl;
 					return -1;
 				}
-				else cur = cur->next;
+				else {
+					if (cur->next != NULL) cur = cur->next;
+					else {
+						collision++;
+						cur->next = new Node;
+						keyCpy(cur->next->key, key, KEY_MAX_LENGTH);
+						cur->next->value = value;
+						cur->next->next = NULL;
+						return 1;
+					}
+				}
 			}
-
-			collision++;
-			//cout << "HASH COLLISION : ";
-			//for (int i = 0; key[i] != '\0'; i++) cout << key[i] << " ";
-			//cout << endl;
-			cur = tb[pos];
-			while (cur->next != NULL) {
-				if (keyCmp(key, cur->key)) break;
-				else cur = cur->next;
-			}
-			cur->next = new Node;
-			keyCpy(cur->next->key, key, KEY_MAX_LENGTH - 1);
-			cur->value = value;
-			return 1;
-			
 		}
 		tb[pos] = new Node;
 		keyCpy(tb[pos]->key, key, KEY_MAX_LENGTH - 1);
 		tb[pos]->value = value;
+		tb[pos]->next = NULL;
 		return 0;
 	}
 
@@ -297,32 +286,31 @@ public:
 	Node* getNode(char (&key)[KEY_MAX_LENGTH]) {
 		int pos = getHash(key);
 		Node* cur = tb[pos];
-		while (cur->next != NULL) {
+		if (cur != NULL) while (cur->next != NULL) {
 			if (keyCmp(key, cur->key)) return cur;
 			else cur = cur->next;
 		}
-		cout << "CANNOT FIND NODE WITH KEY(" << key << ")" << endl;
-		return NULL;
+		return cur;
 	}
 	
 	int getHash(char key[]);
 };
 
 int SolarHashTable::getHash(char key[]) {
-	int hash = 0;
+	unsigned long int hash = 0;
 	int poly = 0xEDB88320;
 	for (int i = 0; key[i] != '\0'; i++) {
+		//hash = (((hash << 5) + hash) + key[i]);
 		hash = (hash * 31 + key[i]); //rabin-carp
 		//hash = (65599 * hash + key[i]); //x65599
 		//poly = (poly << 1) | (poly >> (32 - 1)); hash = (int)(poly * hash + key[i]); //0xEDB88320 + 1bit Shift
 	}
 	hash %= HASHTABLE_SIZE;
-	if (hash < 0) hash *= -1;
 	return hash;
 }
 
 SolarHashTable st;
-int main() {
+int ddmain() {
 	time_t start, end;
 	double result;
 
