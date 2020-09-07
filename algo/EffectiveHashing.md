@@ -2,7 +2,7 @@
 
 ## Hash Methods
 
-- *Rabin Fingerprint*에서 계수는 31, 밑은 2, 모듈러는 그때그때 적절히 큰 소수로 설정한다. 곱셈연산 횟수를 줄이기 위//?해 호너 법칙을 이용한다.
+- *Rabin Fingerprint*에서 계수는 31, 밑은 2, 모듈러는 그때그때 적절히 큰 소수로 설정한다. 곱셈연산 횟수를 줄이기 위해 호너 법칙을 이용한다.
 - 응용프로그램에는 데이터셋에 따라 시프트 연산 등을 이용하여 충돌을 최소화한다.
 - 문자열 비교에 이 방법을 이용할 수 있는데, 대상 문자열과 패턴 문자열을 하나씩 비교하는 것이 아니라 해시값을 구해 비교하는 것이다. 계산량을 줄이기 위해 가장 앞에 계산했던 값을 빼고 마지막 계산값을 더할 수 있다. 구르듯 움직인다고 해서 이런 방식을 *롤링해시*라고 부른다.
 - 그 외에도 다음과 같은 방법이 있다.
@@ -132,10 +132,12 @@ public class Polynomial {
 #include <iostream>
 #include <fstream>
 #include <time.h>
+#include <vector>
 #define HASHTABLE_SIZE 100000//https://www.di-mgt.com.au/primes1000.html
 #define KEY_MAX_LENGTH 100
 #define LINE_MAX_LENGTH 1000
 #define VALUE_MAX_SIZE 1000
+#define VECTOR_MAX_SIZE 1073741823/4
 
 using namespace std;
 
@@ -280,37 +282,39 @@ public:
 
 	int editNode(char (&key)[KEY_MAX_LENGTH], int value) {
 		Node* n = getNode(key);
-		n->value = value;
+		if (n == NULL) return -1;
+		else {
+			n->value = value;
+			return 0;
+		}
 	}
 
 	Node* getNode(char (&key)[KEY_MAX_LENGTH]) {
 		int pos = getHash(key);
 		Node* cur = tb[pos];
-		if (cur != NULL) while (cur->next != NULL) {
-			if (keyCmp(key, cur->key)) return cur;
-			else cur = cur->next;
+		while (cur) {
+			if (key == cur->key) break;
+			else if (cur->next != NULL) cur = cur->next;
 		}
 		return cur;
 	}
 	
-	int getHash(char key[]);
+	int getHash(char key[]) {
+		unsigned long int hash = 0;
+		int poly = 0xEDB88320;
+		for (int i = 0; key[i] != '\0'; i++) {
+			//hash = (((hash << 5) + hash) + key[i]);
+			hash = (hash * 31 + key[i]); //rabin-carp
+			//hash = (65599 * hash + key[i]); //x65599
+			//poly = (poly << 1) | (poly >> (32 - 1)); hash = (int)(poly * hash + key[i]); //0xEDB88320 + 1bit Shift
+		}
+		hash %= HASHTABLE_SIZE;
+		return hash;
+	}
 };
 
-int SolarHashTable::getHash(char key[]) {
-	unsigned long int hash = 0;
-	int poly = 0xEDB88320;
-	for (int i = 0; key[i] != '\0'; i++) {
-		//hash = (((hash << 5) + hash) + key[i]);
-		hash = (hash * 31 + key[i]); //rabin-carp
-		//hash = (65599 * hash + key[i]); //x65599
-		//poly = (poly << 1) | (poly >> (32 - 1)); hash = (int)(poly * hash + key[i]); //0xEDB88320 + 1bit Shift
-	}
-	hash %= HASHTABLE_SIZE;
-	return hash;
-}
-
 SolarHashTable st;
-int ddmain() {
+int stmain() {
 	time_t start, end;
 	double result;
 
