@@ -9,12 +9,15 @@
 ### C++ I/O
 
 - `getline`
+  
   - `istream:getline()` : 마지막에 `'/0'`이 붙는 `char*` 방식 C언어 문자열 방식
   - `string:getline()` : `std::string` 방식
   
 - `setprecision` 
 
 - `cin`, `cout` : 입출력 객체의 <<, >> 연산자는 여러 가지 기본 타입에 대해 오버로딩되어 있다.
+
+  - https://modoocode.com/213
 
 - `fstream`
 
@@ -46,7 +49,6 @@
     writeFile.close();
     ```
 
-    
 
 ### C++11
 
@@ -93,7 +95,7 @@
 - https://jhnyang.tistory.com/115
 - https://modoocode.com/292
 
-
+  
 
 ## COMMON SENSE
 
@@ -172,7 +174,7 @@
 
     - 참조형은 접근할 때 암시적으로 역참조되는 포인터와 같은 역할을 한다. 내부적으로는 포인터를 사용하여 컴파일러에서 구현한다. 선언과 동시에 유효한 객체로 초기화해야하고, 일단 초기화되면 변경할 수 없으므로 안전하다.
 
-- **PASS BY ??**
+- **PASS BY \***
 
   - **pass by value** : 포인터가 아닌 인수는 값으로 전달된다. 해당 함수 매개인자 값으로 복사된다. 함수 내부에서 호출스택의 원래 인수를 수정할 수는 없다. 복사본을 전달받은 것이기 때문이다. 그러나 함수 내부로 복사된 값도 바꿀 수 없도록 하려면 `const` 키워드를 사용한다.
 
