@@ -2,8 +2,6 @@
 
 > '알고 있다고 생각하는 것'과 '아는 것'을 명확히 구분하자
 
-
-
 - 생산성(데브옵스/업무관리/형상관리)
 - git-core-tutorial 번역
 - 프로그래밍 언어
@@ -15,9 +13,11 @@
 - 통계/수학공부
   - KOCW/K-MOOC로 통계학 강의 청강하기
     - 🌓 통계학개론과 R프로그래밍
-    - 수리통계학
-    - 회귀분석
-    - 🌓 AI 통계적 학습론
+    - [Intoduction to Statistics](https://www.youtube.com/watch?v=VPZD_aij8H0&list=PLUl4u3cNGP60uVBMaoNERc6knT_MgPKS0)
+    - AI연구자를 위한 통계적 학습론
+    - [Matrix Methods in Data Analysis, Signal Processing, and Machine Learning](https://www.youtube.com/watch?v=Cx5Z-OslNWE&list=PLUl4u3cNGP63oMNUHXqIUcrkS2PivhN3k)
+    - [Linear Algebra](https://www.youtube.com/watch?v=YrHlHbtiSM0)
+    - https://angeloyeo.github.io/2020/09/07/basic_vector_operation.html
   - 개발자를 위한 선형대수 일독하기
 - CS 복습하기
   - 운영체제
