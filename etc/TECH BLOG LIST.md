@@ -2,11 +2,13 @@
 
 ## LINK
 
-- [SoEn, 소프트웨어 공학연구소 C/C++ 강좌](http://soen.kr/) : C/C++ 명세를 기반으로 깊게 이해하기
-- [조대협, 조대협의 블로그](https://bcho.tistory.com/) : 기술이슈 및 자료모음(채팅앱 구현방식 Polling/Long Polling/Streaming 검색 중 찾음)
-- [John Grib, 기억보조용 위키](https://johngrib.github.io/) : 기술이슈 및 자료모음(REST 논문 본문 검색 중 찾음)
-- [SeemsPyo, Slacking studio BLOG](https://blog.eunsatio.io/) : 웹 프론트 기술이슈 및 자료모음
+- [SoEn, 소프트웨어 공학연구소 C/C++ 강좌](http://soen.kr/)
+- [조대협, 조대협의 블로그](https://bcho.tistory.com/)
+- [John Grib, 기억보조용 위키](https://johngrib.github.io/)
+- [SeemsPyo, Slacking studio BLOG](https://blog.eunsatio.io/)
 - [zerocho](https://www.zerocho.com/)
+- [Rickt Lee](https://hwanine.github.io)
+- [ndb796](https://blog.naver.com/ndb796)
 
 ## PAPER
 
