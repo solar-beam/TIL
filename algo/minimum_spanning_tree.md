@@ -101,9 +101,6 @@
 
 
 > **REFERENCE**
-> 
 > [https://velog.io/@fldfls/최소-신장-트리-MST-크루스칼-프림-알고리즘](https://velog.io/@fldfls/최소-신장-트리-MST-크루스칼-프림-알고리즘)
-> 
 > https://godls036.tistory.com/26
->
 > https://www.cs.princeton.edu/~rs/AlgsDS07/01UnionFind.pdf
