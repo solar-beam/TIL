@@ -1,4 +1,0 @@
-- 모듈화와 commonJS https://poiemaweb.com/nodejs-npm
-- nodeJS와 NPM https://kdydesign.github.io/2017/07/15/nodejs-npm-tutorial/
-- 백엔드를 꿈꾸는 학생개발자에게 https://d2.naver.com/news/3435170
-- JS트렌드 https://d2.naver.com/helloworld/12864
