@@ -1,6 +1,6 @@
 # Daily CountUp
 
-![](.\img\비모.gif)  
+![](img\비모.gif)  
 
   
 
