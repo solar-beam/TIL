@@ -1,6 +1,6 @@
 # Linux inside Docker
 
-윈도우에서 도커를 깔고, 리눅스를 사용해보자. 도커설치는 잘 설명한 블로그가 많으니 생략하겠다. 먼저 도커를 실행하고, 다음과 같이 우분투 이미지를 내려받아 도커 컨테이너를 실행한다.
+윈도우에서 도커를 깔고, 리눅스를 사용해보자. 도커설치는 잘 설명한 블로그가 많으니 생략하겠다. 먼저 도커를 실행하고,r 다음과 같이 우분투 이미지를 내려받아 도커 컨테이너를 실행한다.
 
 ```
 $ docker pull ubuntu
@@ -129,7 +129,7 @@ $ docker attach [ubuntu_container]  # git bash에선mintty로 설정했으면, �
 
   - :book: [Linux kernel user's and administrator's guide](https://www.kernel.org/doc/html/v5.7/admin-guide/index.html), [Linux Network Administrator's Guide](https://tldp.org/LDP/nag2/nag2.pdf)
   - :book: [Building and Installing Software Packages for Linux](http://wiki.kldp.org/wiki.php/LinuxdocSgml/Software-Building-HOWTO) `Autoconf`, `Automake`, `Libtoo` 
-  - :book: [The advanced scripting guide]([Advanced Bash-Scripting Guide (tldp.org)](https://tldp.org/LDP/abs/html/))
+  - :book: [The advanced scripting guide](https://tldp.org/LDP/abs/html/)
 
   
 
