@@ -19,8 +19,6 @@
 
 이런게 있으면 좋겠다, **Backend.AI 베타키랑 메일 본인확인이 좀더 빨랐으면??** 자동화/어뷰징 대응
 
-
-
   
 
 - **Chromium**
@@ -30,14 +28,29 @@
   - *왜 지원하나? 큰 규모의 프로젝트에 참여해보고 싶다. 도전할 과제가 있고, 팀원과 협력할 수 있고, 시행착오를 도움받을 수 있고, 코드를 리뷰해주는 기회는 정말 흔하지 않은 것 같다. 크게 성장할 기회라고 생각해서 지원했다.*
   - *할 수 있나? 크로미움 프로젝트의 Get the code문서를 따라해 다음과 같이 코드를 변경해보았다. git과 c++ 기본은 할 줄 알고, 더 배울 점은 주 2~3일 일일 4시간 가량 시간을 투자할 수 있다.*
 
-이런게 있으면 좋겠다 크롬 익스텐션으로, **현재 페이지 읽어주기**, **열린탭 모두 저장**
+이런게 있으면 좋겠다 크롬 익스텐션으로, **현재 페이지 읽어주기**, **열린탭 모두 저장** 
+
+프로젝트 규모가 너무 커서 엄두가 안난다 빌드하는데 14시간 걸림
 
 [크로미움에 기여하기 (baek9.github.io)](https://baek9.github.io/chromium/2020/01/11/크로미움에_기여하기.html)
 [Contributing to Chromium: an illustrated guide – Monica Dinculescu (meowni.ca)](https://meowni.ca/posts/chromium-101/)
 [크로미움(Chromium) 빌드하기 (dydtjr1128's Blog)](https://dydtjr1128.github.io/chromium/2019/05/03/Chromium-build.html)
 [chromium 빌드 경험담 | Hyeockz (hyeockjinkim.github.io)](https://hyeockjinkim.github.io/open source/2020/01/31/chromium-setting.html)
 
-  
+​    
 
-  
+- **RustPython**
+  - Rust로 Python3 인터프리터를 구현하는 프로젝트로,CPython과 호환성 확대를 목표로 이슈를 찾고 문제해결을 하는 것이 목표입니다. 수준에 따라 프로젝트에 참여할 수 있음.
+  - *왜 지원하나? Rust에 관심이 있어 신청했다. 수준별로 기여할 수 있다기에 신청했다. 그리고 윈도우 환경에서 빌드하다 여러 오류를 겪었는데, github issue페이지와 gitter에서 친절하게 설명해준 것이 인상깊었다. 커뮤니티 분위기가 좋다고 느꼈다.*
+  - *할 수 있나? Python은 기초문법만 알고 있고 코드를 작성해본 경험은 없다. 예제 코드 정도. Java/C++언어에 익숙하고 시간을 충분히 투자해 언어를 배우겠다. git, linux, 쉘 환경에 익숙해서 언어학습, 프로젝트 이해만 된다면 충분히 기여할 수 있을 것이다.*
+
+이런게 있으면 좋겠다. README에 윈도우환경 설정방법 업데이트
+
+​    
+
+- **GlueSQL**
+  - Rust로 구현한 SQL데이터베이스, RUST/SQL/함수형프로그래밍/TDD 관심있는 사람 모집. 
+  - *왜 지원하나? Rust와 함수형 프로그래밍에 관심있어서.*
+  - *할 수 있나? Rust는 7월 내로 공부해가겠다. 여기 TIL링크.*
+
 
