@@ -1,6 +1,6 @@
 # Checking out and Building Chromium for Windows
 
-<img src="../img/비모.gif" style="zoom:200%;" />
+![](../../img/비모.gif)
 
 [Checking out and Building Chromium for Windows (googlesource.com)](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/windows_build_instructions.md) 크로미움 프로젝트 윈도우 빌드 문서를 정리. 각주는 역자주.
 
@@ -89,7 +89,7 @@ $ PATH_TO_INSTALLER.EXE ^
 > **VS라이센스** : Community 버전은 개인 개발자, 학교, OSI가 인정한 오픈소스 커뮤니티, 비영리단체는 제한없이 무료로 사용할 수 있다. 상업용 제품을 만들고자 할 때는 250대 PC/이용자 이하 또는 매출 10억 원 이하 기업만 최대 5개의 라이센스를 무료로 이용할 수 있다. 
 
 > **GUI에서 컴포넌트 선택**
-> ![](../img/VisualStudioInstallSetting.PNG)
+> ![](../../img/VisualStudioInstallSetting.PNG)
 
   
 
@@ -415,7 +415,7 @@ $ gn gen --ide=vs --filters=//chrome --no-deps out\Default
 
 ### CHECKOUT
 
-![](../img/fetchChromium.PNG)
+![](../../img/fetchChromium.PNG)
 
 ```shell
 D:\chromium>fetch chromium
@@ -983,4 +983,4 @@ Running: git config diff.ignoreSubmodules all
 
 ### BUILD
 
-![](../img/buildChromium.PNG)
+![](../../img/buildChromium.PNG)
